@@ -1,5 +1,12 @@
+.DS_Store
+Gemfile.lock
 _site
+.bundle
 .sass-cache
-.jekyll-cache
 .jekyll-metadata
-vendor
+.idea*
+*~
+*.gem
+.ipynb_checkpoints
+.ipynb_checkpoints/*
+*.ipynb
