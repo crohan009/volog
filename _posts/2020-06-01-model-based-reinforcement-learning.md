@@ -1,66 +1,309 @@
 ---
 layout: post
 comments: false
-title: "Model-Based Reinforcement Learning"
+title: "Model-Based Reinforcement Learning (MBRL)"
 date: 2020-06-05 17:31:00
-tags: model-based-reinforcement-learning review long-read
+tags: 
 ---
 
-> In this post, we are briefly going to go over Model Based Reinforcement Learning (MBRL), starting the basics all the way to the current SOTA algorithms in the MBRL literature.
+> This post briefly summarizes the niche field of Model Based Reinforcement Learning (MBRL), starting from the basics all the way to the current SOTA algorithms.
 
 <!--more-->
+
+ <!-- For some <b>fantastic</b> notes on Reinforcement Learning, check out Lilian Weng's notes [here](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html).  -->
+
+---
+<h3> Contents </h3>
 
 {: class="table-of-content"}
 * TOC
 {:toc}
 
-## What is Reinforcement Learning?
+---
 
-Say, we have an agent in an unknown environment and this agent can obtain some rewards by interacting with the environment. The agent ought to take actions so as to maximize cumulative rewards. In reality, the scenario could be a bot playing a game to achieve high scores, or a robot trying to complete physical tasks with physical items; and not just limited to these.
+## The Basics (RL in a nutshell) 
+
+- Any **agent** and its **environment** may be modelled as a high dimensional, discrete time, state-action space. 
+- If $$s_t$$ denotes the **state** of the robot, $$u_t$$ denotes the **action** at time $$t$$, then $$s_{t+1}$$ is state of the robot at time $$t+1$$, and then the transition probability can be written as: 
+$$ 
+P(s_{t+1} | s_t, u_t)
+$$. 
+- A rule that the robot can follow, to perform the action $$u_t$$ when it is in state $$s_t$$  is called the **policy**, commonly denoted by 
+$$
+\pi(u_t|s_t)
+$$.
+- A **reward** or **cost** function indicates how expensive or costly it might be to be in a particular state and take some action. It may be expressed as 
+$$
+R(s_t, u_t) = \mathbb{E} \big[ R_{t+1} | s_t, u_t \big]
+$$.
+- A **Value function** then measures the goodness of a state, or how rewarding a state or an action is by prediction of future rewards: $$G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... = \sum_{k=0}^T \gamma^k R_{t+k+1}$$, where $$\gamma \in [0,1]$$ is a discount factor which weights near term rewards more than rewards in the distant future.
+- There are two sorts of value functions which arise in the RL literature. The first is the **State-Value**. This is the expected return if we are in state $$s_t$$ at time $$t$$: 
+$$
+V_{\pi}(s) = \mathbb{E} \big[ G_{t} | s_t \big]
+$$. 
+The other sort of value is the **Action-Value** or the **Q-value** which represents the expected return for a given state and action pair: 
+$$
+Q_{\pi}(s,u) = \mathbb{E} \big[ G_{t} | s_t, u_t\big]
+$$.
+
+<br>
 
 
-![Illustration of a reinforcement learning problem]({{ '/assets/images/RL_illustration.png' | relative_url }})
-{: style="width: 70%;" class="center"}
-*Fig. 1. An agent interacts with the environment, trying to take smart actions to maximize cumulative rewards.*
+![Illustration of a reinforcement learning problem]({{ '/assets/images/agent_env.png' | relative_url }})
+{: style="width: 40%;" class="center"}
+*Fig. 1. An agent interacts with with environment (the world) by performing actions. It's environment in turn gives it rewards or penalizes it for poor actions. The corresponding next state of the agent is also returned by the environment (MBRL algorithms use predictive models to generate 'hypothetical next-states').*
 
-### Key Concepts
+---
 
-Now Let's formally define a set of key concepts in RL.
+## What is MBRL ?
 
-The agent is acting in an **environment**.How the environment reacts to certain actions is defined by a **model** which we may or may not know. The agent can stay in one of many **states** ($$s \in \mathcal{S}$$) of the environment, and choose to take one of many **actions** ($$a \in \mathcal{A}$$) to switch from one state to another. Which state the agent will arrive in is decided by transition probabilities between states ($$P$$). Once an action is taken, the environment delivers a **reward** ($$r \in \mathcal{R}$$) as feedback. 
+Reinforcement Learning techniques that use a predictive model (anything from a neural network or a simple regression)  to generate hypothetical training samples of the world.
 
-The model defines the reward function and transition probabilities. We may or may not know how the model works and this differentiate two circumstances:
-- **Know the model**: planning with perfect information; do model-based RL. When we fully know the environment, we can find the optimal solution by [Dynamic Programming](https://en.wikipedia.org/wiki/Dynamic_programming) (DP). Do you still remember "longest increasing subsequence" or "traveling salesmen problem" from your Algorithms 101 class? LOL. This is not the focus of this post though. 
-- **Does not know the model**: learning with incomplete information; do model-free RL or try to learn the model explicitly as part of the algorithm. Most of the following content serves the scenarios when the model is unknown.
+### Overview of MBRL algorithms
 
-The agent's **policy** ($$\pi(s)$$) provides the guideline on what is the optimal action to take in a certain state with <span style="color: #e01f1f;">**the goal to maximize the total rewards**</span>. Each state is associated with a **value** function ($$V(s)$$) predicting the expected amount of future rewards we are able to receive in this state. In other words, the value function quantifies how good a state is. Both policy and value functions are what we try to learn in reinforcement learning. 
-
-
-![Categorization of RL Algorithms]({{ '/assets/images/RL_algorithm_categorization.png' | relative_url }})
+![RL map]({{ '/assets/images/RL_algo_map.png' | relative_url }})
 {: style="width: 100%;" class="center"}
-*Fig. 2. Summary of approaches in RL based on whether we want to model the value, policy, or the environment. (Image source: reproduced from David Silver's RL course [lecture 1](https://youtu.be/2pWv7GOvuf0).)*
+*Fig. 2. A non-exhaustive map of the major RL algorithms out there.*
 
+The sub-categories (first suggested [here](https://arxiv.org/abs/1907.02057)) haven't been widely estabilshed and are subject to change due to large overlaps between the listed algorithms.
 
-The interaction between the agent and the environment involves a sequence of actions and observed rewards in time, $$t=1, 2, \dots, T$$. During the process, the agent accumulates the knowledge about the environment, learns the optimal policy, and makes decisions on which action to take next so as to efficiently learn the best policy. Let's label the state, action, and reward at time step t as $$S_t$$, $$A_t$$, and $$R_t$$, respectively. Thus the interaction sequence is fully described by:
+---
+*Before heading straight into the MBRL algorithms, it is probably a good idea to look at the important MFRL techniques out there first, since a lot of it will be utilized within MBRL algorithms.*
+
+---
+
+## What about MFRL ?
+
+MFRL (Model-Free RL) techniques bypass the need to model the world. The control policy is learned directly. These algorithms may be broadly categorized as follows:
+
+### 1. On-Policy MFRL
+
+In On-policy algorithms, the training samples are collected according to a target policy which is the same policy that is optimized.
+
+#### 1.1 Actor-Critic (AC) algorithms
+
+The policy and the value function comprise of the two main components of policy gradient algorithm. The value function can be used to assist the policy update, while the learned policy is useful to evaluate the value function. Therefore AC algorithms contain two models:
+
+- **Actor**: learns the <u>policy</u> via model parameters $$\theta$$ of the policy $$\pi_{theta}$$.
+- **Critic**: learns the <u>value function</u> through parameters $$\phi$$. (This may be the action-value 
+    $$
+    Q_{\phi}(a|s)
+    $$  or the state-value 
+        $$
+    V_{\phi}(s)
+    $$).
+
+#### 1.2 [TRPO algorithms](https://arxiv.org/abs/1502.05477) 
+
+Gradient updates can potentially update policy parameters drastically which has been shown to decrease the stability of policy gradient algorithms. TRPO mitigates this issue by enforcing a [KL divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) constraint on the size of the policy update.
+
+The TRPO algorithm defines the following constrained optimization problem:
 
 $$
-S_1, A_1, R_2, S_2, A_2, \dots, S_T
+\underset{\theta}{\text{maximize}} \ \ \mathbb{E}_t  \Bigg( \frac{\pi_{\theta}(a_t | s_t)}{\pi_{\theta_{old}}(a_t | s_t)} \Bigg) \hat{A}_t \\
+\text{subject to:} \ \ \mathbb{E}_t \Big[ KL( \theta_{old}(.|s_t), \theta(.|s_t) ) \Big] \leq \delta, \; i = 1, \ldots, m.
 $$
 
-$$S_T$$ is the terminal state.
+$$\theta_{old}$$ are the policy parameters before the update. The algorithm uses an estimated [advantage function](https://mc.ai/advantage-function-in-deep-reinforcement-learning/#:~:text=Advantage%20function%20is%20nothing%20but,value%20function%20of%20the%20state.&text=This%20can%20be%20intuitively%20taken,have%20taken%20at%20that%20state.) $$\hat{A}(.)$$. The [constrained optimization](https://en.wikipedia.org/wiki/Constrained_optimization#:~:text=In%20mathematical%20optimization%2C%20constrained%20optimization,of%20constraints%20on%20those%20variables.) described above enforces the distribution of the policy parameters of the old and new distribution to have a **KL divergence** within a parameter, $$\delta$$. This prevents the new policy from diverging too far from the previous policy distribution.
+
+#### 1.3 [PPO algorithms](https://arxiv.org/abs/1707.06347) 
+
+PPO simplifies the constraint of TRPO with a **clipped surrogate objective** while maintaining similar performance. Let the ratio between the old and new policies be:
+
+$$
+\begin{equation}
+    \begin{split}
+        r(\theta) = \frac{\pi_{\theta}(a|s)}{\pi_{\theta_{old}}(a|s)}
+    \end{split}
+\end{equation}
+$$
+
+Then the TRPO objective function is given by:
+
+$$
+\begin{equation}
+    \begin{split}
+        J^{TRPO}(\theta) = \mathbb{E} \Big[ r(\theta) \ \hat{A}_{\theta_{old}}(s,a) \Big]
+    \end{split}
+\end{equation}
+$$
+
+PPO modifies this by imposing a constraint by forcing $$r(\theta)$$ to remain within $$(1-\epsilon)$$ and $$(1+\epsilon)$$ (where $$\epsilon$$ is a hyperparameter).
+
+$$
+\begin{equation}
+    \begin{split}
+        J^{PPO}(\theta) = \mathbb{E} \Big[ min \Big( r(\theta) \hat{A}_{\theta_{old}}(s,a) , clip(r(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_{\theta_{old}}(s,a) \Big) \Big]
+    \end{split}
+\end{equation}
+$$
+
+### 2. Off-Policy MFRL
+
+Off policy methods utilize two different policies for training samples, the **behavior policy** and policy optimization, the **target policy**. This leads to the follwing advantages:
+- **Experience Replay** - past episodes can be used to improve sample efficiency.
+- **Exploration** - Collecting samples from a the behaviour policy (which is different from the target policy) leads to better exploration.
+
+Some examples of Off-policy algorithms are: 
+- Q-learning
+- DQN
+- DDPG
+- TD3
+- SAC
+
+## MBRL Algorithms
+
+### Preliminaries
+
+The **State space** $$S \in R^n$$. refers to the state of an agent in its environment. We assume that it is a finite, discretised, n-dimensional space. The a **Action space** $$A \in R^m$$, is similarly defined on an m-dimensional space. The two primary components of any MBRL algorithm are:
+
+- #### Model Learning 
+
+A **Transition function / Model** $$f: SxA \rightarrow S$$ maps any given state of the system and an action performed to the next state. In modern MBRL algorithms, function approximators such as neural networks are commonly used to make a local approximation of the state transition of the model. Lets refer to this **function approximator** as $$\hat{f}_{\phi}$$ parameterized by $$\phi$$. The objective of the model is to learn a function that minimizes the distances between predicted state and the ground truth states:
+
+$$
+\begin{equation} 
+    \min_{\phi} \sum_{t=0}^T \left\| s_{t+1} - \hat{f_{\phi}}(s_t, a_t) \right\|_2^2
+\end{equation}
+$$
+
+If denote $$\hat{f_{\phi}}(.)$$ as $$\hat{s}$$, then an alternative measure of distance would be to decouple function approximator from the ground truth trajectory as follows:
+
+$$
+\begin{equation} 
+    \min_{\phi} \sum_{\ t=1}^T \left\| s_{t+1} - \hat{f_{\phi}}(\hat{s_t}, a_t) \right\|_2^2
+\end{equation}
+$$
+
+The <u>only difference is that the approximator now relies on its own past prediction for its predictions</u>. This allows us to compare the deviation of the predicted trajectories of our function approximators from the ground truth trajectories.
+
+- #### Policy Learning 
+
+The goal of any MBRL algorithm is to learn a **policy function**, 
+$$
+\pi_{\theta}(a|s)
+$$ that is the probability of taking an action $$a$$ given a state $$s$$, that maximizes the expected sum of future rewards. Here, the **reward function** (or negative Cost function) 
+$$
+r: SxA \rightarrow R
+$$, can be any heuristic function that enables an agent to perform a particular job (for example: walking or following a defined trajectory). The objective function may then be written as the following optimization equation:
+
+$$
+\begin{equation}
+    \hat{\eta}(\theta ; \phi) := \mathbb{E}_{\hat{\tau}} \Big[ \sum^{T}_{t=0} r(s_t, a_t) \Big]
+\end{equation}
+$$
+
+where 
+$$
+\hat{\tau} = (s_0, a_0, s_1, a_1, ...)
+$$, 
+$$s_0$$ follows an initial state distribution $$ s_0 ~ \rho_0: S \rightarrow R_{+}$$, the sequence of actions is given by the learned policy $$a_t ~ \pi_{\theta}(.|s_t)$$,the states are predicted by the function approximator $$s_{t+1} = \hat{f}_{\phi}(s_t, a_t)$$ over a time horizon $$T$$.
+
+The gradient computation of the objective function (2.3) can be estimated as follows:
+
+$$
+\begin{equation}
+    \nabla_{\theta} \hat{\eta} = \mathbb{E} \Big[ \nabla_{\theta} \sum^{T}_{t=0} r(s_t, a_t) \Big]
+\end{equation}
+$$
+
+This gradient is computed across all the time steps across the time horizon, $$T$$ and propagated backwards. This method is called **Backpropagation through time** (BPTT). A simple vanilla MBRL algorithm now be formulated using the aforementioned steps described in Algorithm 1 below.
+
+---
+**Algorithm 1: Vanilla Model-Based Deep Reinforcement Learning**
+1. Initialize a policy $$\pi_{\theta_0}$$ and a model $$\hat{f_{\phi}}$$
+2. Initialize an empty dataset $$D$$.
+3. Repeat:
+    1. Collect samples from real enviromnemt $$f$$ using $$\pi_\theta$$ and add them to $$D$$.
+    2. Train the model $$\hat{f_{\phi}}$$ using $$D$$.
+    3. Repeat (until performance stops improving)
+        1. Collect fictious samples from $$\hat{f_{\phi}}$$ using $$\pi_\theta$$.
+        2. Update the policy using **BPTT** on fictitious samples.
+        3. Estimate the performance $$\hat{\eta}(\theta, \phi)$$.
+
+---
 
 
-Terms you will encounter a lot when diving into different categories of RL algorithms:
-- **Model-based**: Rely on the model of the environment; either the model is known or the algorithm learns it explicitly.
-- **Model-free**: No dependency on the model during learning.
-- **On-policy**: Use the deterministic outcomes or samples from the target policy to train the algorithm.
-- **Off-policy**: Training on a distribution of transitions or episodes produced by a different behavior policy rather than that produced by the target policy.
+### Causes of MBRL stagnation
+
+[Wang, Tingwu et al.](https://arxiv.org/abs/1907.02057) highlight three primary challenges that have been known to limit MBRL research from surpassing its MFRL counterparts.
+
+1. **Dynamics Bottleneck**: Algorithms with learned model dynamics are stuck at local minima which is worse than using ground-truth dynamics. Therefore, performance does not increase when more data is collected.
+2. **Planning Horizon Dilemma**: Increasing planning horizon provides better rewards estimation, but the performance drops due to modelling errors and the curse of dimensionality.
+3. **{Early Termination  Dilemma**: early termination is commponly used in MFRL for more directed exploration, achieving faster learning. Similar performance gains are not yet observed in MBRL algorithms.
+
+<h2> Algorithms </h2>
+
+In the following sections we take a look the latest state of the art MBRL algorithms.  
+
+![MBRL map]({{ '/assets/images/MBRL_map.png' | relative_url }})
+{: style="width: 50%;" class="center"}
+*Fig. 3. A non-exhaustive map of some of the major MBRL SOTA algorithms out there.*
+
+### 1. Dyna Styled Algorithms
+
+The Dyna architecture, as formulated by [Stutton (1991)](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=711FEF6BA26BBF98C28BC111B26F8761?doi=10.1.1.48.6005&rep=rep1&type=pdf), introduced a **fundamental idea**: **planning by <i>"trying things in your head"</i>**. The general Dyna algorithm alternates between performing RL on real world data and imagined data from a learned world model as follows:
+
+---
+**Algorithm 2: Generic Dyna Algorithm**
+1. Observe the world's state and reactively choose an action based on it
+2. Observe resultant reward and new state.
+3. Apply RL to this experience.
+4. Update action model based on this experience.
+5. Repeat $$k$$ times:
+    1. Choose a hypothetical world state and action.
+    2. Predict resultant reward and new state using action model.
+    3. Apply RL to this hypothetical experience.
+
+---
+
+In the above algorithm, **Steps 1-3** correspond to performing <u>RL on real world data</u>, **Step 4** is when the algorithm <u>learns a world model</u>, and finally **Steps 6-8** is <u>RL performed on the hypothetical world model</u>. As described in the paper, the Dyna framework suffers from the following disadvantages:
+
+1. **Requires Large Memory** - to store backed-up evaluations/reactions associated with each state-action pair
+2. **Hierarchical Planning** - Dyna plans at the level of individual actions. Therefore, there is no hierarchy for global planning and optimization.
+3. **Ambiguous/Hidden States** - A robot cannot unambiguously determine the world's state as much of it is hidden from it.
+4. **Reliance on Supervised Learning** - The traditinal Dyna framework uses a table based approach sufferes form the curse of dimensionality.
+5. **Ensuring Variety in Behaviors** - This is the exploration versus exploitation trade off.
+6. **Taskability** - Dyna is based on the reward maximization of only one goal. Therefore, in it's original form it is not well suited for multiple tasks.
+
+
+#### 1.1 (ME-TRPO) [Model Ensemble TRPO](https://arxiv.org/abs/1802.10592) 
+
+Three modifications are made to the Vanilla MBRL Algorithm in ME-TRPO:
+
+1. **Model Ensemble**: An ensemble of dynamic models \{ $$f_{\phi_1},..., f_{\phi_K}$$ \} are used to fit the real world data by
+    - training via standard supervised learning.
+    - The models only differ by initial weights and the order in which mini-batches are sampled from the dataset.
+2. **Policy Optimization**: Utilizing TRPO to optimize policy over the model ensemble.
+    - A model is randomly chosen out of the ensemble to predict to the next state.
+    - This prevents the policy from over- fitting to any single model.
+3. **Policy Validation**: The model ensemble is used to monitor the policy's performance over validation data by:
+    - computing a ratio of models in which the policy improves:
+$$ 
+\frac{1}{K} \sum_{k=1}^{K} \1 \Big[ \hat{\eta}(\theta_{new},\phi_k) > \hat{\eta}(\theta_{old},\phi_k) \Big]
+$$
+    - Training over fictitious data samples continues as long as this computed ratio exceeds a certain threshold.
+
+
+### 2. Policy Search with BPTT
+
+#### 2.1. [PILCO](https://arxiv.org/abs/1805.00909)
+
+### 3. Shooting Algorithms
+
+#### 3.1. [PETS](https://arxiv.org/abs/1805.12114)
+
+### 4. Unsipervised Algorithms
+
+#### 4.1. [DADS](https://arxiv.org/abs/1907.01657) 
+
 
 
 ## References
 
-[1] Yuxi Li. [Deep reinforcement learning: An overview.](https://arxiv.org/pdf/1701.07274.pdf) arXiv preprint arXiv:1701.07274. 2017.
+
+[1] 
 
 ---
 
-*If you notice mistakes and errors in this post, please don't hesitate to contact me and I'll be sure to correct them right away !*
+*Please don't hesitate to contact me with any errors. I'll be sure to correct them right away !*
