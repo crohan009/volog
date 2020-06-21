@@ -280,7 +280,7 @@ Three modifications are made to the Vanilla MBRL Algorithm in ME-TRPO:
 3. **Policy Validation**: The model ensemble is used to monitor the policy's performance over validation data by:
     - computing a ratio of models in which the policy improves:
 $$ 
-\frac{1}{K} \sum_{k=1}^{K} \1 \Big[ \hat{\eta}(\theta_{new},\phi_k) > \hat{\eta}(\theta_{old},\phi_k) \Big]
+\frac{1}{K} \sum_{k=1}^{K} \mathbb{1} \Big[ \hat{\eta}(\theta_{new},\phi_k) > \hat{\eta}(\theta_{old},\phi_k) \Big]
 $$
     - Training over fictitious data samples continues as long as this computed ratio exceeds a certain threshold.
 
@@ -289,21 +289,152 @@ $$
 
 #### 2.1. [PILCO](https://arxiv.org/abs/1805.00909)
 
+In PILCO, Gaussian Processes (GPs) are used to learn the dynamics of the environment. The policy $$\pi_{\theta}$$ maximizes an objective function via optimization by computing analytic derivatives of the objective with respect to the policy parameters $$\theta$$. 
+
+The core components of PILCO are:
+
+1. **Dynamics Model Learning**
+
+- **inputs**: ($$x_{t-1}$$, $$u_{t-1}$$)$$\in \mathbb{R}^{D+F}$$,
+-  **targets**: $$\triangle_{t} = x_t - x_{t-1}+\varepsilon$$ (where $$\varepsilon$$ $$\sim$$ N(0, $$\Sigma_{\varepsilon}$$) and 
+- $$\Sigma_{\varepsilon}=diag([\sigma_{\varepsilon_1},...,\sigma_{\varepsilon_D}])$$), 
+are used to learn the **one step GP predictions**:
+
+$$
+\begin{equation}
+    \begin{split}
+        p(x_t | x_{t-1}, u_{t-1}) & = \mathbb{N}(x_t | \mu_t, \Sigma_t) \\
+        \mu & = x_{t-1} + \mathbb{E}_f [\triangle_t] \\
+        \Sigma_t & = var_f [\triangle_t]
+    \end{split}
+\end{equation}
+$$
+
+Given $$n$$ training inputs and targets the posterior GP hyperparameters are learned by **Evidence Maximization**.
+
+2. **Policy Evaluation**
+
+The policy $$\pi$$ is evaluated by computing the expected return:
+
+$$
+\begin{equation}
+    \begin{split}
+        J^{\pi}(\theta) = \sum_{t=0}^T \mathbb{E}_{x_t}[c(x_t)] , \ \ \ \ \ \ \ \ x_0 \sim \mathbb{N} (\mu_0, \Sigma_0) 
+    \end{split}
+\end{equation}
+$$
+
+3. **Policy Improvement**
+
+The policy is improved by computing the gradient of the expected return:
+
+$$
+\begin{equation}
+    \begin{split}
+        \nabla_{\theta} \mathbb{E}_{x_t}[c(x_t)] = \frac{\delta \varepsilon_t}{\delta \theta}
+         & = \Big( \frac{\delta \varepsilon_t}{\delta p(x_t)} \Big) \Big( \frac{\delta p(x_t)}{\delta \theta} \Big) \\
+         & = \Big( \frac{\delta \varepsilon_t}{\delta \mu_t} \frac{\delta \mu_t}{\delta \theta}+ \frac{\delta \varepsilon_t}{\delta \Sigma_t}\frac{\delta \Sigma_t}{\delta \theta}\Big) \Big( \frac{\delta p(x_t)}{\delta p(x_{t-1})}\frac{\delta p(x_{t-1})}{\delta \theta}+ \frac{\delta p(x_{t})}{\delta \theta}\Big) 
+    \end{split}
+\end{equation}
+$$
+
+The chain rule is applied to further expand $$\frac{\delta \mu_t}{\delta \theta}$$ and $$\frac{\delta p(x_t)}{\delta p(x_{t-1})}$$.
+
+
+The overall algorithm is summarized below.
+
+---
+**Algorithm 3: PILCO Algorithm**
+1. **Init:** Sample controller parameters $$\theta \sim \mathbb{N}(0, I)$$ <br> Apply random control signals and record data.
+2. Repeat:
+    1. Learn probabilistic (GP) dynamics model using all data.
+    2. Model-based policy search
+    3. Repeat:
+        1. Approximate inference for policy evaluation: get $$J^{\pi}(\theta)$$.
+        2. Gradient-based policy improvement: get $$\frac{\delta J^\pi (\theta)}{\delta \theta}$$
+        3. Update parameters $$\theta$$ (L-BFGS).
+    4. Until:  convergence; **return** $$\theta$$
+    5. Set $$\pi$$* $$\leftarrow \pi (\theta$*$)$$
+    6. Apply $$\pi$$* to system (single trial / episode) and record data.
+3. Until:  task is learned.
+
+---
+
 ### 3. Shooting Algorithms
 
 #### 3.1. [PETS](https://arxiv.org/abs/1805.12114)
 
-### 4. Unsipervised Algorithms
+The PETS algorithm uses an ensemble of neural network models to capture and differentiate between epistemic and aleatoric uncertainties in the model's dynamics. 
 
-#### 4.1. [DADS](https://arxiv.org/abs/1907.01657) 
+**Aleatoric Uncertainty**: (inherent system stochasticity) it is representative of the unknowns that differ each time we run teh same experiments.
+
+**Epistemic Uncertainty**: (subjective uncertainty; due to limited data) these due to uncertainties in things one could know in theory, but not in practice. Example: due to measurements inaccuracies, missing data.
+
+The key contributions of the paper are as follows:
+1. **Neural Network (NN) Dynamics Models**
+
+    1. **Probabilistic NNS (P)**:
+        - NN outputs parameterize a probability distribution 
+        - These NNs capture **aleatoric** uncertainty.
+        - Loss function: 
+
+        $$
+        Loss_{P}(\theta) = -\sum_{n=1}^N log \ \widetilde{f}_{\theta}(s_{n+1} | s_n, a_n)
+        $$ (Negative log prediction probability)
+    2. **Deterministic NNS (D)**:
+        - This can be viewed as a special case of Probabilistic NNs
+        - The outputs are delta distributions centered around point predictions.
+        - $$
+        \widetilde{f}_{\theta}(s_t, a_t)
+        $$: $$
+        \widetilde{f}_{\theta}(s_{t+1}|s_t,a_t) = \delta (s_{t+1} - \widetilde{f}_{\theta} (s_t, a_t) ) 
+        $$
+        - Loss function: 
+
+        $$
+        Loss_{F}(\theta) = \sum_{n=1}^N | s_{n+1} - f_{\theta}(s_n, a_n) |
+        $$ (Mean Squared Error Loss)
+    3. **Ensemble NNs**:
+        - 'B' models are parameterized by $\theta_b$; $$(b=1,...,B)$$ for model $$\widetilde{f}_{\theta_b}$$.
+        - The resulting predictive probability distribution is given by: 
+        $$
+        \widetilde{f}_{\theta} = \frac{1}{\beta} \sum_{b=1}^\beta \widetilde{f}_{\theta_b}
+        $$.
+        - Each model is trained via Bootstrapping, that is, uniform random sampling with replacement, from a dataset $$\mathbb{D}$$ to create $$\mathbb{D}_i$$ subsamples.
+2. **Trajectory Sampling (TS)**
+To predict plausible state trajectories, P particles are propagated from an initial state $$s_0$$ by $$s_{t+1}^p \sim f_{\theta_{b(p,t)}} (s_t^p, a_t)$$ according to a particular bootstrapped model $$b(p,t)$$ in {1,...,B}. The two variants of TS as described by the paper are as follows:
+    1. $$\mathbf{TS-1}$$ : particles uniformly resample a bootstrap model every time step.
+    2. $$\mathbf{TS-\infty}$$ : particle bootstraps remain the same during a trial.
 
 
 
-## References
+---
+**Algorithm 3: PETS Algorithm**
+1. **Init:** data $\mathbb{D}$ with a random controller for on trial.
+2. **For** Trial k=1 to K **do**:
+    1. Train a PE dynamics model $$\widetilde{f}$$ given $$\mathbb{D}$$.
+    2. **For** Trial k=1 to TaskHorizon **do**:
+        1. **For** Actions sampled $$a_{t:t+T} \sim CEM(.)$$
+            1. Propagate state particles $$s_\tau^p$$ using TS and $$f|\{ \mathbb{D}, a_{t:t+T}\}$$
+            2. Evaluate actions as $$\sum_{\tau=t}^{t+\tau} \frac{1}{T} \sum_{p=1}^P r(s_\tau^p, a_\tau)$$
+            3. Update CEM(.) distribution.
+        2. Execute first action $$a_t$$* form optimal actions $$a_{t:t+\tau}*$$
+        3. Record outcome: $$ \mathbb{D} \leftarrow \mathbb{D} \cup \{ s_t, a_t$*$, s_{t+1} \} $$
+
+---
+
+<!-- 
+### 4. Unsupervised Algorithms
+
+#### 4.1. [DADS](https://arxiv.org/abs/1907.01657)  -->
+
+
+
+<!-- ## References
 
 
 [1] 
 
----
+--- -->
 
 *Please don't hesitate to contact me with any errors. I'll be sure to correct them right away !*
