@@ -305,53 +305,53 @@ The core components of PILCO are:
 
 1. **Dynamics Model Learning**
 
-- **inputs**: ($$x_{t-1}$$, $$u_{t-1}$$)$$\in \mathbb{R}^{D+F}$$,
--  **targets**: $$\triangle_{t} = x_t - x_{t-1}+\varepsilon$$ (where $$\varepsilon$$ $$\sim$$ N(0, $$\Sigma_{\varepsilon}$$) and 
-- $$\Sigma_{\varepsilon}=diag([\sigma_{\varepsilon_1},...,\sigma_{\varepsilon_D}])$$), 
-are used to learn the **one step GP predictions**:
+    - **inputs**: ($$x_{t-1}$$, $$u_{t-1}$$)$$\in \mathbb{R}^{D+F}$$,
+    -  **targets**: $$\triangle_{t} = x_t - x_{t-1}+\varepsilon$$ (where $$\varepsilon$$ $$\sim$$ N(0, $$\Sigma_{\varepsilon}$$) and 
+    - $$\Sigma_{\varepsilon}=diag([\sigma_{\varepsilon_1},...,\sigma_{\varepsilon_D}])$$), 
+    are used to learn the **one step GP predictions**:
 
-$$
-\begin{equation}
-    \begin{split}
-        p(x_t | x_{t-1}, u_{t-1}) & = \mathbb{N}(x_t | \mu_t, \Sigma_t) \\
-        \mu & = x_{t-1} + \mathbb{E}_f [\triangle_t] \\
-        \Sigma_t & = var_f [\triangle_t]
-    \end{split}
-\end{equation}
-$$
+    $$
+    \begin{equation}
+        \begin{split}
+            p(x_t | x_{t-1}, u_{t-1}) & = \mathbb{N}(x_t | \mu_t, \Sigma_t) \\
+            \mu & = x_{t-1} + \mathbb{E}_f [\triangle_t] \\
+            \Sigma_t & = var_f [\triangle_t]
+        \end{split}
+    \end{equation}
+    $$
 
-Given $$n$$ training inputs and targets the posterior GP hyperparameters are learned by **Evidence Maximization**.
+    Given $$n$$ training inputs and targets the posterior GP hyperparameters are learned by **Evidence Maximization**.
 
 2. **Policy Evaluation**
 
-The policy $$\pi$$ is evaluated by computing the expected return:
+    The policy $$\pi$$ is evaluated by computing the expected return:
 
-$$
-\begin{equation}
-    \begin{split}
-        J^{\pi}(\theta) = \sum_{t=0}^T \mathbb{E}_{x_t}[c(x_t)] , \ \ \ \ \ \ \ \ x_0 \sim \mathbb{N} (\mu_0, \Sigma_0) 
-    \end{split}
-\end{equation}
-$$
+    $$
+    \begin{equation}
+        \begin{split}
+            J^{\pi}(\theta) = \sum_{t=0}^T \mathbb{E}_{x_t}[c(x_t)] , \ \ \ \ \ \ \ \ x_0 \sim \mathbb{N} (\mu_0, \Sigma_0) 
+        \end{split}
+    \end{equation}
+    $$
 
 3. **Policy Improvement**
 
-The policy is improved by computing the gradient of the expected return:
+    The policy is improved by computing the gradient of the expected return:
 
-$$
-\begin{equation}
-    \begin{split}
-        \nabla_{\theta} \mathbb{E}_{x_t}[c(x_t)] = \frac{\delta \varepsilon_t}{\delta \theta}
-         & = \Big( \frac{\delta \varepsilon_t}{\delta p(x_t)} \Big) \Big( \frac{\delta p(x_t)}{\delta \theta} \Big) \\
-         & = \Big( \frac{\delta \varepsilon_t}{\delta \mu_t} \frac{\delta \mu_t}{\delta \theta}+ \frac{\delta \varepsilon_t}{\delta \Sigma_t}\frac{\delta \Sigma_t}{\delta \theta}\Big) \Big( \frac{\delta p(x_t)}{\delta p(x_{t-1})}\frac{\delta p(x_{t-1})}{\delta \theta}+ \frac{\delta p(x_{t})}{\delta \theta}\Big) 
-    \end{split}
-\end{equation}
-$$
+    $$
+    \begin{equation}
+        \begin{split}
+            \nabla_{\theta} \mathbb{E}_{x_t}[c(x_t)] = \frac{\delta \varepsilon_t}{\delta \theta}
+            & = \Big( \frac{\delta \varepsilon_t}{\delta p(x_t)} \Big) \Big( \frac{\delta p(x_t)}{\delta \theta} \Big) \\
+            & = \Big( \frac{\delta \varepsilon_t}{\delta \mu_t} \frac{\delta \mu_t}{\delta \theta}+ \frac{\delta \varepsilon_t}{\delta \Sigma_t}\frac{\delta \Sigma_t}{\delta \theta}\Big) \Big( \frac{\delta p(x_t)}{\delta p(x_{t-1})}\frac{\delta p(x_{t-1})}{\delta \theta}+ \frac{\delta p(x_{t})}{\delta \theta}\Big) 
+        \end{split}
+    \end{equation}
+    $$
 
-The chain rule is applied to further expand $$\frac{\delta \mu_t}{\delta \theta}$$ and $$\frac{\delta p(x_t)}{\delta p(x_{t-1})}$$.
+    The chain rule is applied to further expand $$\frac{\delta \mu_t}{\delta \theta}$$ and $$\frac{\delta p(x_t)}{\delta p(x_{t-1})}$$.
 
 
-The overall algorithm is summarized below.
+    The overall algorithm is summarized below.
 
 ---
 **Algorithm 3: PILCO Algorithm**
@@ -362,7 +362,7 @@ The overall algorithm is summarized below.
     3. Repeat:
         1. Approximate inference for policy evaluation: get $$J^{\pi}(\theta)$$.
         2. Gradient-based policy improvement: get $$\frac{\delta J^\pi (\theta)}{\delta \theta}$$
-        3. Update parameters $$\theta$$ (L-BFGS).
+        3. Update parameters $$\theta$$ ([L-BFGS](https://en.wikipedia.org/wiki/Broyden%E2%80%93Fletcher%E2%80%93Goldfarb%E2%80%93Shanno_algorithm)).
     4. Until:  convergence; **return** $$\theta$$
     5. Set $$\pi$$* $$\leftarrow \pi (\theta$*$)$$
     6. Apply $$\pi$$* to system (single trial / episode) and record data.
@@ -420,16 +420,16 @@ To predict plausible state trajectories, P particles are propagated from an init
 
 ---
 **Algorithm 3: PETS Algorithm**
-1. **Init:** data $\mathbb{D}$ with a random controller for on trial.
+1. **Init:** data $$\mathbb{D}$$ with a random controller for on trial.
 2. **For** Trial k=1 to K **do**:
     1. Train a PE dynamics model $$\widetilde{f}$$ given $$\mathbb{D}$$.
     2. **For** Trial k=1 to TaskHorizon **do**:
         1. **For** Actions sampled $$a_{t:t+T} \sim CEM(.)$$
-            1. Propagate state particles $$s_\tau^p$$ using TS and $$f|\{ \mathbb{D}, a_{t:t+T}\}$$
+            1. Propagate state particles $$s_\tau^p$$ using TS and $$f$$ \| { $$\mathbb{D}$$, $$a_{t:t+T}$$ }
             2. Evaluate actions as $$\sum_{\tau=t}^{t+\tau} \frac{1}{T} \sum_{p=1}^P r(s_\tau^p, a_\tau)$$
             3. Update CEM(.) distribution.
         2. Execute first action $$a_t$$* form optimal actions $$a_{t:t+\tau}*$$
-        3. Record outcome: $$ \mathbb{D} \leftarrow \mathbb{D} \cup \{ s_t, a_t$*$, s_{t+1} \} $$
+        3. Record outcome: $$ \mathbb{D} \leftarrow \mathbb{D} \cup \{ s_t, a_t*, s_{t+1} \} $$
 
 ---
 
