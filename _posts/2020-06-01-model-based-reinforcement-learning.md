@@ -277,6 +277,8 @@ In the above algorithm, **Steps 1-3** correspond to performing <u>RL on real wor
 6. **Taskability** - Dyna is based on the reward maximization of only one goal. Therefore, in it's original form it is not well suited for multiple tasks.
 
 
+
+
 #### 1.1 (ME-TRPO) [Model Ensemble TRPO](https://arxiv.org/abs/1802.10592) 
 
 Three modifications are made to the Vanilla MBRL Algorithm in ME-TRPO:
@@ -425,7 +427,7 @@ To predict plausible state trajectories, P particles are propagated from an init
     1. Train a PE dynamics model $$\widetilde{f}$$ given $$\mathbb{D}$$.
     2. **For** Trial k=1 to TaskHorizon **do**:
         1. **For** Actions sampled $$a_{t:t+T} \sim CEM(.)$$
-            1. Propagate state particles $$s_\tau^p$$ using TS and $$f$$ \| { $$\mathbb{D}$$, $$a_{t:t+T}$$ }
+            1. Propagate state particles $$s_\tau^p$$ using TS and $$\widetilde{f}$$ \| { $$\mathbb{D}$$, $$a_{t:t+T}$$ }
             2. Evaluate actions as $$\sum_{\tau=t}^{t+\tau} \frac{1}{T} \sum_{p=1}^P r(s_\tau^p, a_\tau)$$
             3. Update CEM(.) distribution.
         2. Execute first action $$a_t$$* form optimal actions $$a_{t:t+\tau}*$$
