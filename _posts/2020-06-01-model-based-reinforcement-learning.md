@@ -51,7 +51,7 @@ $$.
 
 ![Illustration of a reinforcement learning problem]({{ '/assets/images/agent_env.png' | relative_url }})
 {: style="width: 40%;" class="center"}
-*Fig. 1. An agent interacts with with environment (the world) by performing actions. It's environment in turn gives it rewards or penalizes it for poor actions. The corresponding next state of the agent is also returned by the environment (MBRL algorithms use predictive models to generate 'hypothetical next-states').*
+*Fig. 1. Basic RL Problem: An agent interacts with with environment (the world) by performing actions. It's environment in turn gives it rewards or penalizes it for poor actions. The corresponding next state of the agent is also returned by the environment (MBRL algorithms use predictive models to generate 'hypothetical next-states'). The agent uses this information to figure out its future actions to maximize its future rewards.*
 
 ---
 
@@ -97,14 +97,24 @@ The policy and the value function comprise of the two main components of policy 
 
 Gradient updates can potentially update policy parameters drastically which has been shown to decrease the stability of policy gradient algorithms. TRPO mitigates this issue by enforcing a [KL divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) constraint on the size of the policy update.
 
-The TRPO algorithm defines the following constrained optimization problem:
+The TRPO algorithm defines the following [constrained optimization](https://en.wikipedia.org/wiki/Constrained_optimization#:~:text=In%20mathematical%20optimization%2C%20constrained%20optimization,of%20constraints%20on%20those%20variables.) problem:
 
 $$
 \underset{\theta}{\text{maximize}} \ \ \mathbb{E}_t  \Bigg( \frac{\pi_{\theta}(a_t | s_t)}{\pi_{\theta_{old}}(a_t | s_t)} \Bigg) \hat{A}_t \\
 \text{subject to:} \ \ \mathbb{E}_t \Big[ KL( \theta_{old}(.|s_t), \theta(.|s_t) ) \Big] \leq \delta, \; i = 1, \ldots, m.
 $$
 
-$$\theta_{old}$$ are the policy parameters before the update. The algorithm uses an estimated [advantage function](https://mc.ai/advantage-function-in-deep-reinforcement-learning/#:~:text=Advantage%20function%20is%20nothing%20but,value%20function%20of%20the%20state.&text=This%20can%20be%20intuitively%20taken,have%20taken%20at%20that%20state.) $$\hat{A}(.)$$. The [constrained optimization](https://en.wikipedia.org/wiki/Constrained_optimization#:~:text=In%20mathematical%20optimization%2C%20constrained%20optimization,of%20constraints%20on%20those%20variables.) described above enforces the distribution of the policy parameters of the old and new distribution to have a **KL divergence** within a parameter, $$\delta$$. This prevents the new policy from diverging too far from the previous policy distribution.
+$$\theta_{old}$$ are the policy parameters before the update. The algorithm uses an *estimated* **advantage function** $$\hat{A}(.)$$. The **constrained optimization** described above enforces the distribution of the policy parameters of the old and new distribution to have a **KL divergence** within a parameter, $$\delta$$. This prevents the new policy from diverging too far from the previous policy distribution.
+
+- **Advantage function**:  $$\hat{A}_t = R_t - b(s_t)$$ 
+    - $$R_t$$ is the **expected future returns**, $$R_t = \sum_{t'=t}^{T-1} \gamma^{t'-t} \ r_t$$. 
+        - The **Q-value** ($$Q^{\pi}(s,u)$$), i.e, **Action-Value function**, can be used as an estimate of $$R_t$$.
+    - $$b(s_t)$$ is the **baseline future rewards**. 
+        - The **state-value function** $$V^{\pi}(s)$$ is a good choice for the baseline rewards.
+    - Therefore, it together - Estimated Advantage function:  
+
+    $$\hat{A}_t = Q^{\pi}(s,u) - V^{\pi}(s)$$
+
 
 #### 1.3 [PPO algorithms](https://arxiv.org/abs/1707.06347) 
 
@@ -224,7 +234,7 @@ This gradient is computed across all the time steps across the time horizon, $$T
 ---
 
 
-### Causes of MBRL stagnation
+### Causes of MBRL performance stagnation
 
 [Wang, Tingwu et al.](https://arxiv.org/abs/1907.02057) highlight three primary challenges that have been known to limit MBRL research from surpassing its MFRL counterparts.
 
@@ -429,6 +439,120 @@ To predict plausible state trajectories, P particles are propagated from an init
 #### 4.1. [DADS](https://arxiv.org/abs/1907.01657)  -->
 
 
+## Experiments
+
+### 1. Model Learning
+
+MBRL algorithms mainly prioritize the policy optimization problem when it comes to robot control. 
+
+This section of experiments focuses on the model learning portion of MBLR. For this purpose we attempt to learn the model dynamics of a Double inverted Pendulum, a simple yet hard model to approximate due to its chaotic dynamics. 
+
+![MuJoCo Double Inverted Pendulum]({{ '/assets/images/double_inv_pendulum.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 4. The Double Inverted Pendulum model on a cart constrained in 2 dimensions.*
+
+The model has the following states:
+
+$$
+\begin{equation*}
+    \begin{split}
+        x = \begin{bmatrix}
+            x &
+            v_x &
+            pos_x &
+            cos(\theta) &
+            sin(\theta) &
+            \dot{\theta} &
+            cos(\gamma) &
+            sin(\gamma) &
+            \dot{\gamma} 
+            \end{bmatrix}^T
+    \end{split}
+\end{equation*}
+$$
+
+#### Models
+
+<h4> Model1: Baseline model </h4>
+
+A simple linear regression model is used to establish a baseline for prediction model states. 
+
+![Baseline model]({{ '/assets/images/NN_model1.png' | relative_url }})
+{: style="width: 35%;" class="center"}
+*Fig. 5. Simple linear regression model used as the Baseline model.*
+
+This model performs a linear transformation from $\mathbb{R}^{10}$ to $\mathbb{R}^9$.
+
+<h4> Model2: Baseline Neural Network (NN) model1 </h4>
+
+A secondary neural network model comprising of five densely connected layers with a ReLU non-linearity in-between the layers is also tested. 
+
+![Model2]({{ '/assets/images/NN_model2.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 6. A fully connected Neural network model used as a secondary model.*
+
+Both the models so far accept 10 input features comprising of 9 states , i.e, the current state of the robot, and  and 1 action  on the cart. They output 9 features  representing the next predicted state.
+
+<h4> Model3: NN model2 </h4>
+
+This model has the same architecture as Model 2, but instead of predicting the next state, it predicts the change in state ($$\Delta s_t$$) that takes the model from the current state to the next state.
+
+
+#### Loss functions
+
+We use the following trajectory roll out Mean Squared Error (MSE) Loss functions for the experiments (described in the [model learning section](https://crohan009.github.io/rolog/2020/06/05/model-based-reinforcement-learning.html#model-learning)):
+
+
+$$
+\begin{equation} 
+    Loss_{1} =  \sum_{t=0}^T \left\| s_{t+1} - \hat{f_{\phi}}(s_t, a_t) \right\|_2^2
+\end{equation}
+$$
+
+This is the basic Mean Squared Error loss that takes the MSE error between ever single predicted state and its ground truth state. 
+
+
+$$
+\begin{equation} 
+    Loss_{2} = \sum_{\ t=1}^T \left\| s_{t+1} - \hat{f_{\phi}}(\hat{s_t}, a_t) \right\|_2^2
+\end{equation}
+$$
+
+This MSE loss is generalized so that we may be able to perform a prediction of multiple states for a specified prediction time horizon. The only difference here is that the next predicted is dependent on the previous predicted state. 
+
+<h4> Baseline Model 1 Predictions </h4>
+
+![AvsP_plots_cos_action_model1]({{ '/assets/images/AvsP_plots_cos_action_model1.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 7. Predicted state comparison for multi-istep MSE loss function (Type 2). The figures show the actual and predicted states of Model1 that correspond to a 100 step trajectory with a cosine action at each step. The baseline model1 was pre-trained on null actions was then re-trained on trajectories in which the action was a cosine function of the time step.*
+
+
+<h4> NN Model 1 Predictions </h4>
+
+![AvsP_plots_cos_action_model2]({{ '/assets/images/AvsP_plots_cos_action_model2.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 8. Predicted state comparison for multi-istep MSE loss function (Type 2). The figures show the actual and predicted states of Model2 that correspond to a 100 step trajectory with a cosine action at each step. Model2 was pre-trained on null actions was then re-trained on trajectories in which the action was a cosine function of the time step.*
+
+<h4> NN Model 2 Predictions </h4>
+
+![AvsP_plots_cos_action_model3]({{ '/assets/images/AvsP_plots_cos_action_model3.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 9. Predicted state comparison for multi-istep MSE loss function (Type 2). The figures show the actual and predicted states of Model3 that correspond to a 100 step trajectory with a cosine action at each step. Model3 was pre-trained on null actions was then re-trained on trajectories in which the action was a cosine function of the time step.*
+
+![A-P_plots_cos_action_model3]({{ '/assets/images/A-P_plots_cos_action_model3.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 10. The figure illustrates the drift in the predicted states. The plots how the absolute difference between predicted and actual states over 100 step trajectory with a cosine action at each step.*
+
+<i>**(to be continued)**</i>
+
+<!-- #### Prediction difference plots
+
+<h4> Baseline Model 1 |Actual - Predicted| </h4>
+
+<h4> NN Model 1 Predictions |Actual - Predicted| </h4>
+
+<h4> NN Model 2 Predictions |Actual - Predicted| </h4> -->
+
 
 <!-- ## References
 
@@ -436,5 +560,7 @@ To predict plausible state trajectories, P particles are propagated from an init
 [1] 
 
 --- -->
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 *Please don't hesitate to contact me with any errors. I'll be sure to correct them right away !*
