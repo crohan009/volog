@@ -502,7 +502,7 @@ This model has the same architecture as Model 2, but instead of predicting the n
 
 #### Loss functions
 
-We use the following trajectory roll out Mean Squared Error (MSE) Loss functions for the experiments (described in the [model learning section](https://crohan009.github.io/rolog/2020/06/05/model-based-reinforcement-learning.html#model-learning)):
+We use the following trajectory roll out Mean Squared Error (MSE) Loss functions for the experiments (described in the [model learning section](https://crohan009.github.io/volog/2020/06/05/model-based-reinforcement-learning.html#model-learning)):
 
 
 $$

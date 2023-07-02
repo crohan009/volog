@@ -1,8 +1,9 @@
-title: Ro's Logs and Blogs
+title: VoLogs and Blogs
 author: Rohan
-baseurl: "/rolog"
+baseurl: "/volog"
 description: "Brain dump."
 profile_url: "https://crohan009.github.io/"
+github_username:  crohan009
 
 # Build settings
 markdown: kramdown
