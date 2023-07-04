@@ -18,6 +18,10 @@ body {
   color: var(--text-color);
 }
 
+body.dark-mode code {
+  color: #171515;
+}
+
 .main-content {
   flex-grow: 1;
   display: flex;

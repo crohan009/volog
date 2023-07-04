@@ -137,7 +137,7 @@ Source: [End-to-End Object Detection with Transformers, Pg: 26](https://arxiv.or
 
 The DETR (DEtection TRansformer) model uses the `HungarianMatcher` class, which is used to match the predicted bounding boxes and classes (from the DETR model) with the ground truth bounding boxes and classes. The matching is done in such a way as to minimize the total cost, which is a combination of the classification cost, the bounding box cost, and the Generalized Intersection over Union (GIoU) cost.
 
-##### Cost Matrix "`C`" Creation
+##### Cost Matrix "C" Creation
 
 The cost matrix "`C`" is a combination of three different costs: *classification* cost, *bounding box* cost, and *GIoU* cost. Each of these costs are computed separately and then combined to form the final cost matrix "`C`".
 
