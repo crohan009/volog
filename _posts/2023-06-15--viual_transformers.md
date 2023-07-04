@@ -199,6 +199,47 @@ The sequence of patch embeddings is then passed through a standard transformer e
 
 The output of the transformer encoder is a sequence of vectors, one for each input patch. The vector corresponding to the first patch (or the "class" token in NLP terminology) is used as the image representation and is passed through a classification head to predict the image label.
 
+```python
+import torch
+import torch.nn as nn
+from torch.nn import TransformerEncoder, TransformerEncoderLayer
+
+class PatchEmbedding(nn.Module):
+    def __init__(self, patch_size=16, in_chans=3, embed_dim=768):
+        super().__init__()
+        self.patch_size = patch_size
+        self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size)
+
+    def forward(self, x):
+        x = self.proj(x)  # (B, E, H, W)
+        return x.flatten(2).transpose(1, 2)  # (B, N, E)
+
+class Vit(nn.Module):
+    def __init__(self, patch_size=16, num_classes=1000, num_layers=12, num_heads=12, embed_dim=768):
+        super(Vit, self).__init__()
+        self.patch_embed = PatchEmbedding(patch_size=patch_size, embed_dim=embed_dim)
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
+        self.transformer_encoder = TransformerEncoder(encoder_layer=TransformerEncoderLayer(embed_dim, num_heads), 
+                                                      num_layers=num_layers)
+        self.classifier = nn.Linear(embed_dim, num_classes)
+
+    def forward(self, x):
+        x = self.patch_embed(x)
+        cls_tokens = self.cls_token.expand(x.shape[0], -1, -1)  # (B, 1, E)
+        x = torch.cat((cls_tokens, x), dim=1)  # (B, 1+N, E)
+        pos_embed = nn.Parameter(torch.zeros(1, x.shape[1], x.shape[2]))
+        x = x + pos_embed  # Add positional embedding
+        x = self.transformer_encoder(x)
+        x = x.mean(dim=1)
+        x = self.classifier(x)
+        return x
+
+vit = Vit(num_classes=1000)
+inputs = torch.randn(1, 3, 800, 1200)
+logits = vit(inputs)
+probabilities = torch.nn.functional.softmax(logits, dim=-1)
+```
+
 ### 2.3 Training and Evaluation
 
 ViT models are typically pre-trained on a large dataset, such as ImageNet, and then fine-tuned on a smaller target dataset. Despite their lack of inductive biases that are inherent to CNNs, such as local receptive fields and translation equivariance, ViT models have achieved competitive, and in some cases, state-of-the-art performance on various image classification benchmarks when trained at scale.
