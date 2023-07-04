@@ -237,7 +237,6 @@ class Vit(nn.Module):
 vit = Vit(num_classes=1000)
 inputs = torch.randn(1, 3, 800, 1200)
 logits = vit(inputs)
-probabilities = torch.nn.functional.softmax(logits, dim=-1)
 ```
 
 ### 2.3 Training and Evaluation
