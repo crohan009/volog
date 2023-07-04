@@ -30,27 +30,9 @@ Another shared characteristic between DETR and ViT is the utilization of positio
 
 ---
 
-## **DETR vs ViT: Notable Differences**
-
-While DETR and ViT both harness the power of Transformers, they apply it in different ways to address distinct challenges in computer vision.
-
-1. **Tasks:** DETR was designed with object detection and panoptic segmentation tasks in mind, while ViT primarily addresses image classification tasks.
-
-2. **Input Representation:** DETR maintains the original spatial resolution of the image, flattening it into a sequence of image patches for the transformer encoder. In contrast, ViT divides the image into a fixed number of patches, each of which is represented as a token for the Transformer.
-
-3. **Model Components:** DETR features an object detection head on top of the Transformer and uses a set prediction approach with bipartite matching loss. Additionally, it incorporates an encoder-decoder Transformer structure for reasoning about object relations. ViT employs a pure Transformer encoder and adds a simple classification head on top of it.
-
-4. **Training Strategies:** DETR employs a matching cost and a Hungarian algorithm for pairing predicted and ground-truth objects, a considerable departure from traditional methods. ViT uses standard supervised learning with a cross-entropy loss for training.
-
-5. **Performance on Small Objects:** DETR has shown difficulty in dealing with small objects, a challenge that is not explicitly mentioned in the ViT paper.
-
-6. **Architectural Variations:** DETR utilises a more complex architecture with multiple encoder and decoder layers. ViT, in contrast, follows a more straightforward, streamlined architecture.
-
----
-
 ## 1. DETR
 
-The DETR (DEtection TRansformer) model is a novel object detection model that uses a transformer architecture. 
+The DETR (DEtection TRansformer) model is a novel object detection model that uses a transformer architecture (both the **transformer encoder** and the **transformer decoder**). 
 
 ![DeTr]({{ '/assets/images/vision_transformers/detr_01.png' | relative_url }})
 {: style="width: 100%;" class="center"}
@@ -191,3 +173,72 @@ The term "Hungarian" comes from the Hungarian algorithm, also known as the Kuhn-
 
 
 This returned list of tuples is the final output of the `HungarianMatcher`'s forward method. Each tuple in the list corresponds to a single image in the batch, and contains two tensors of `indices`: the first tensor contains the indices of the selected predictions, and the second tensor contains the indices of the corresponding selected targets. These `indices` can be used to gather the selected predictions and targets from the outputs and targets variables, respectively.
+
+
+## 2. ViT
+
+![ViT_model_overview]({{ '/assets/images/vision_transformers/ViT_model_overview.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 4. Vision Transformer [[Source](https://arxiv.org/abs/2010.11929)]*
+
+### 2.1 Introduction
+
+The Vision Transformer (ViT) is a model that applies the **transformer encoder architecture** (as seen on the right side of the figure), which has been highly successful in discriminative NLP tasks, directly to image classification tasks. Unlike previous approaches that combine convolutional neural networks (CNNs) with self-attention mechanisms, ViT uses a pure transformer (encoder) architecture and treats an image as a sequence of patches, similar to how a transformer model in NLP treats a sentence as a sequence of words.
+
+### 2.2 Model Architecture
+
+#### 2.2.1 Patch Embedding
+
+The first step in the ViT model is to divide the input image into a fixed number of patches, each of size 16x16 pixels. These patches are then linearly transformed (or "embedded") into a sequence of vectors, which serve as the input to the transformer model. This is similar to how words in a sentence are embedded into vectors in NLP.
+
+#### 2.2.2 Transformer Encoder
+
+The sequence of patch embeddings is then passed through a standard transformer encoder, which consists of a stack of transformer layers. Each layer in the transformer encoder contains a multi-head self-attention mechanism and a position-wise feed-forward network.
+
+#### 2.2.3 Classification Head
+
+The output of the transformer encoder is a sequence of vectors, one for each input patch. The vector corresponding to the first patch (or the "class" token in NLP terminology) is used as the image representation and is passed through a classification head to predict the image label.
+
+### 2.3 Training and Evaluation
+
+ViT models are typically pre-trained on a large dataset, such as ImageNet, and then fine-tuned on a smaller target dataset. Despite their lack of inductive biases that are inherent to CNNs, such as local receptive fields and translation equivariance, ViT models have achieved competitive, and in some cases, state-of-the-art performance on various image classification benchmarks when trained at scale.
+
+### 2.4 Key Findings and Contributions
+
+The key contributions of the ViT model are:
+
+- Demonstrating that the transformer architecture can be applied directly to image classification tasks, without the need for CNNs or other image-specific components.
+- Showing that despite their lack of inductive biases, transformer models can achieve competitive performance on image classification tasks when trained at scale.
+- Proposing a new way of treating images as sequences of patches, which allows for the direct application of transformer models to images.
+
+### 2.5 Why Use Transformers for Image Classification?
+
+While Convolutional Neural Networks (CNNs) have been the go-to models for image classification tasks, the Vision Transformer (ViT) takes a different approach by applying the transformer architecture directly to images. Here are the key reasons for this choice:
+
+- **Modeling Long-Range Dependencies**: Transformers are capable of modeling long-range, global dependencies within the data. In the context of images, this means that a transformer can capture relationships between pixels that are far apart, something that CNNs, with their focus on local, nearby pixels, struggle with.
+
+- **Scalability**: Transformers are more flexible and scalable than CNNs. They can be easily scaled up by increasing the number of layers or the model size, which often leads to better performance. This is not always the case with CNNs, which can suffer from diminishing returns when scaled up.
+
+- **Potential Representational Power**: The success of transformers in NLP has shown that they are capable of learning useful representations from data, even without strong inductive biases. This suggests that transformers could also learn to recognize useful patterns in images, given enough data and computational resources.
+
+In summary, while CNNs are more efficient parametrically, transformers offer advantages in terms of modeling long-range dependencies, scalability, and potential representational power. These advantages make transformers an interesting and promising alternative to CNNs for image classification tasks.
+
+---
+
+## **DETR vs ViT: Notable Differences**
+
+While DETR and ViT both harness the power of Transformers, they apply it in different ways to address distinct challenges in computer vision.
+
+1. **Tasks:** DETR was designed with object detection and panoptic segmentation tasks in mind, while ViT primarily addresses image classification tasks.
+
+2. **Input Representation:** DETR maintains the original spatial resolution of the image, flattening it into a sequence of image patches for the transformer encoder. In contrast, ViT divides the image into a fixed number of patches, each of which is represented as a token for the Transformer.
+
+3. **Model Components:** DETR features an object detection head on top of the Transformer and uses a set prediction approach with bipartite matching loss. Additionally, it incorporates an encoder-decoder Transformer structure for reasoning about object relations. ViT employs a pure Transformer encoder and adds a simple classification head on top of it.
+
+4. **Training Strategies:** DETR employs a matching cost and a Hungarian algorithm for pairing predicted and ground-truth objects, a considerable departure from traditional methods. ViT uses standard supervised learning with a cross-entropy loss for training.
+
+5. **Performance on Small Objects:** DETR has shown difficulty in dealing with small objects, a challenge that is not explicitly mentioned in the ViT paper.
+
+6. **Architectural Variations:** DETR utilises a more complex architecture with multiple encoder and decoder layers. ViT, in contrast, follows a more straightforward, streamlined architecture.
+
+---
