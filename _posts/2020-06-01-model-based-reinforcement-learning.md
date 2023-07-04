@@ -49,7 +49,7 @@ $$.
 <br>
 
 
-![Illustration of a reinforcement learning problem]({{ '/assets/images/agent_env.png' | relative_url }})
+![Illustration of a reinforcement learning problem]({{ '/assets/images/rl/agent_env.png' | relative_url }})
 {: style="width: 40%;" class="center"}
 *Fig. 1. Basic RL Problem: An agent interacts with with environment (the world) by performing actions. It's environment in turn gives it rewards or penalizes it for poor actions. The corresponding next state of the agent is also returned by the environment (MBRL algorithms use predictive models to generate 'hypothetical next-states'). The agent uses this information to figure out its future actions to maximize its future rewards.*
 
@@ -61,7 +61,7 @@ Reinforcement Learning techniques that use a predictive model (anything from a n
 
 ### Overview of MBRL algorithms
 
-![RL map]({{ '/assets/images/RL_algo_map.png' | relative_url }})
+![RL map]({{ '/assets/images/rl/RL_algo_map.png' | relative_url }})
 {: style="width: 100%;" class="center"}
 *Fig. 2. A non-exhaustive map of the major RL algorithms out there.*
 
@@ -246,7 +246,7 @@ This gradient is computed across all the time steps across the time horizon, $$T
 
 In the following sections we take a look the latest state of the art MBRL algorithms.  
 
-![MBRL map]({{ '/assets/images/MBRL_map.png' | relative_url }})
+![MBRL map]({{ '/assets/images/rl/MBRL_map.png' | relative_url }})
 {: style="width: 50%;" class="center"}
 *Fig. 3. A non-exhaustive map of some of the major MBRL SOTA algorithms out there.*
 
@@ -449,7 +449,7 @@ MBRL algorithms mainly prioritize the policy optimization problem when it comes 
 
 This section of experiments focuses on the model learning portion of MBLR. For this purpose we attempt to learn the model dynamics of a Double inverted Pendulum, a simple yet hard model to approximate due to its chaotic dynamics. 
 
-![MuJoCo Double Inverted Pendulum]({{ '/assets/images/double_inv_pendulum.png' | relative_url }})
+![MuJoCo Double Inverted Pendulum]({{ '/assets/images/rl/double_inv_pendulum.png' | relative_url }})
 {: style="width: 100%;" class="center"}
 *Fig. 4. The Double Inverted Pendulum model on a cart constrained in 2 dimensions.*
 
@@ -479,7 +479,7 @@ $$
 
 A simple linear regression model is used to establish a baseline for prediction model states. 
 
-![Baseline model]({{ '/assets/images/NN_model1.png' | relative_url }})
+![Baseline model]({{ '/assets/images/rl/NN_model1.png' | relative_url }})
 {: style="width: 35%;" class="center"}
 *Fig. 5. Simple linear regression model used as the Baseline model.*
 
@@ -489,7 +489,7 @@ This model performs a linear transformation from $\mathbb{R}^{10}$ to $\mathbb{R
 
 A secondary neural network model comprising of five densely connected layers with a ReLU non-linearity in-between the layers is also tested. 
 
-![Model2]({{ '/assets/images/NN_model2.png' | relative_url }})
+![Model2]({{ '/assets/images/rl/NN_model2.png' | relative_url }})
 {: style="width: 100%;" class="center"}
 *Fig. 6. A fully connected Neural network model used as a secondary model.*
 
@@ -524,24 +524,24 @@ This MSE loss is generalized so that we may be able to perform a prediction of m
 
 <h4> Baseline Model 1 Predictions </h4>
 
-![AvsP_plots_cos_action_model1]({{ '/assets/images/AvsP_plots_cos_action_model1.png' | relative_url }})
+![AvsP_plots_cos_action_model1]({{ '/assets/images/rl/AvsP_plots_cos_action_model1.png' | relative_url }})
 {: style="width: 100%;" class="center"}
 *Fig. 7. Predicted state comparison for multi-istep MSE loss function (Type 2). The figures show the actual and predicted states of Model1 that correspond to a 100 step trajectory with a cosine action at each step. The baseline model1 was pre-trained on null actions was then re-trained on trajectories in which the action was a cosine function of the time step.*
 
 
 <h4> NN Model 1 Predictions </h4>
 
-![AvsP_plots_cos_action_model2]({{ '/assets/images/AvsP_plots_cos_action_model2.png' | relative_url }})
+![AvsP_plots_cos_action_model2]({{ '/assets/images/rl/AvsP_plots_cos_action_model2.png' | relative_url }})
 {: style="width: 100%;" class="center"}
 *Fig. 8. Predicted state comparison for multi-istep MSE loss function (Type 2). The figures show the actual and predicted states of Model2 that correspond to a 100 step trajectory with a cosine action at each step. Model2 was pre-trained on null actions was then re-trained on trajectories in which the action was a cosine function of the time step.*
 
 <h4> NN Model 2 Predictions </h4>
 
-![AvsP_plots_cos_action_model3]({{ '/assets/images/AvsP_plots_cos_action_model3.png' | relative_url }})
+![AvsP_plots_cos_action_model3]({{ '/assets/images/rl/AvsP_plots_cos_action_model3.png' | relative_url }})
 {: style="width: 100%;" class="center"}
 *Fig. 9. Predicted state comparison for multi-istep MSE loss function (Type 2). The figures show the actual and predicted states of Model3 that correspond to a 100 step trajectory with a cosine action at each step. Model3 was pre-trained on null actions was then re-trained on trajectories in which the action was a cosine function of the time step.*
 
-![A-P_plots_cos_action_model3]({{ '/assets/images/A-P_plots_cos_action_model3.png' | relative_url }})
+![A-P_plots_cos_action_model3]({{ '/assets/images/rl/A-P_plots_cos_action_model3.png' | relative_url }})
 {: style="width: 100%;" class="center"}
 *Fig. 10. The figure illustrates the drift in the predicted states. The plots how the absolute difference between predicted and actual states over 100 step trajectory with a cosine action at each step.*
 
