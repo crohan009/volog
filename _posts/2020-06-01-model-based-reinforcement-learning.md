@@ -3,10 +3,10 @@ layout: post
 comments: false
 title: "Model-Based Reinforcement Learning (MBRL)"
 date: 2020-06-05 17:31:00
-tags: 
+tags: reinforcement-learning, ML, AI
 ---
 
-> This post briefly summarizes the niche field of Model Based Reinforcement Learning (MBRL), starting from the basics all the way to the current SOTA algorithms.
+> A summary of the niche field of Model Based Reinforcement Learning (MBRL), starting from the basics all the way to the current SOTA algorithms.
 
 <!--more-->
 

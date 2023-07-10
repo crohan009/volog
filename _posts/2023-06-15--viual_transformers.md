@@ -3,11 +3,11 @@ layout: post
 comments: false
 title: "Vision Transformers"
 subtitle: "Transformers in Computer Vision"
-date: 2022-06-15 00:01:01
-tags:
+date: 2023-06-15 00:01:01
+tags: paper-review, transformers, AI, ML
 ---
 
-> This article dives in the world Transformer-based models used in computer vision (CV) by analyzing the [Vision Transformer](https://arxiv.org/abs/2010.11929) and [Detection Transformer](https://arxiv.org/abs/2005.12872) models and explores their adoption for end-to-end CV training, eliminating intermediate hand-crafted components; and their utilization of positional encodings to capture the spatial layout of images.
+> Transformer-based models used in computer vision can be traced back to the papers [Vision Transformer](https://arxiv.org/abs/2010.11929) and [Detection Transformer](https://arxiv.org/abs/2005.12872). Here's a closer look at these models and their adoption for end-to-end training for CV tasks, eliminating intermediate hand-crafted components; and their utilization of positional encodings to capture the spatial layout of images.
 
 <!--more-->
 
@@ -20,7 +20,7 @@ tags:
 
 ---
 
-## **DETR & ViT: The Intersecting Pathways**
+## **Introduction: DeTr & ViT - The Intersecting Pathways**
 
 The world of computer vision has seen revolutionary advancements, with Transformers as a notable pillar of change. Originally designed for sequence transduction tasks in Natural Language Processing (NLP), the Transformer architecture has proven to be versatile, finding purpose in vision tasks in DETR (Detection Transformer) and ViT (Visual Transformer) papers. 
 
@@ -135,7 +135,7 @@ Source: [End-to-End Object Detection with Transformers, Pg: 26](https://arxiv.or
 
 #### Step #1 - The Matching Cost
 
-The DETR (DEtection TRansformer) model uses the `HungarianMatcher` class, which is used to match the predicted bounding boxes and classes (from the DETR model) with the ground truth bounding boxes and classes. The matching is done in such a way as to minimize the total cost, which is a combination of the classification cost, the bounding box cost, and the Generalized Intersection over Union (GIoU) cost.
+The DETR (DEtection TRansformer) model uses the `HungarianMatcher` class, which is used to match the predicted bounding boxes and classes (from the DETR model) with the ground truth bounding boxes and classes. The matching is done in such a way as to minimize the total cost, which is a combination of the classification cost, the bounding box cost, and the [Generalized Intersection over Union](https://giou.stanford.edu/) (GIoU) cost.
 
 ##### Cost Matrix "C" Creation
 
