@@ -1,4 +1,6 @@
-/* Dark Techy Syntax Highlighting */
+/* ========================================
+   Dark Mode Syntax Highlighting (Default)
+   ======================================== */
 .highlight {
   background: #161622;
   border-radius: 8px;
@@ -76,7 +78,7 @@
   .w { color: #e4e4e7; }
 }
 
-/* Inline code */
+/* Inline code - Dark Mode */
 code.highlighter-rouge {
   background: #1a1a28;
   color: #00f0ff;
@@ -86,51 +88,64 @@ code.highlighter-rouge {
   border: 1px solid #27272a;
 }
 
-/* Light mode syntax highlighting */
+/* ========================================
+   Light Mode Syntax Highlighting
+   High contrast colors for readability
+   ======================================== */
 body.light-mode {
   .highlight {
     background: #f8fafc;
+    border: 1px solid #e2e8f0;
     
-    /* Comments */
-    .c, .c1, .cm, .cs { color: #64748b; }
+    pre {
+      background: #f8fafc;
+    }
     
-    /* Keywords */
-    .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #7c3aed; }
+    /* Comments - Dark gray for good contrast */
+    .c, .c1, .cm, .cs { color: #64748b; font-style: italic; }
     
-    /* Names */
-    .n { color: #334155; }
-    .na { color: #0891b2; }
+    /* Errors */
+    .err { color: #dc2626; background-color: transparent; }
+    
+    /* Keywords - Deep purple for visibility */
+    .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #7c3aed; font-weight: 600; }
+    
+    /* Names - Dark text */
+    .n { color: #1e293b; }
+    .na { color: #0369a1; }
     .nb { color: #b45309; }
-    .nc { color: #059669; font-weight: 600; }
-    .nd { color: #db2777; }
-    .ne { color: #dc2626; }
-    .nf { color: #2563eb; }
+    .nc { color: #047857; font-weight: 600; }
+    .nd { color: #be185d; }
+    .ne { color: #dc2626; font-weight: 600; }
+    .nf { color: #1d4ed8; font-weight: 500; }
     .ni { color: #7c3aed; }
     .nl { color: #b45309; }
-    .nn { color: #059669; }
+    .nn { color: #047857; }
     .no { color: #dc2626; }
-    .nt { color: #db2777; }
-    .nv { color: #0891b2; }
+    .nt { color: #be185d; }
+    .nv { color: #0369a1; }
     
     /* Operators */
-    .o, .ow { color: #db2777; }
+    .o, .ow { color: #be185d; }
     
     /* Punctuation */
-    .p { color: #64748b; }
+    .p { color: #475569; }
     
-    /* Strings */
-    .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss { color: #059669; }
+    /* Strings - Dark green */
+    .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss { color: #047857; }
     
-    /* Numbers */
+    /* Numbers - Dark amber */
     .m, .mi, .mf, .mh, .mo, .il { color: #b45309; }
     
     /* Generic */
     .gd { color: #dc2626; background-color: #fef2f2; }
-    .gi { color: #059669; background-color: #f0fdf4; }
+    .ge { font-style: italic; }
+    .gi { color: #047857; background-color: #f0fdf4; }
     .go { color: #64748b; }
-    .gp { color: #64748b; }
-    .gh { color: #1e293b; }
-    .gu { color: #0891b2; }
+    .gp { color: #475569; font-weight: 700; }
+    .gh { color: #0f172a; font-weight: 700; }
+    .gu { color: #0369a1; font-weight: 700; }
+    .gt { color: #dc2626; }
     
     /* Line numbers */
     .lineno { 
@@ -139,12 +154,16 @@ body.light-mode {
     }
     
     /* Variable */
-    .v, .vi, .vc, .vg { color: #0891b2; }
+    .v, .vi, .vc, .vg { color: #0369a1; }
+    
+    /* Whitespace */
+    .w { color: #1e293b; }
   }
   
+  /* Inline code - Light Mode with high contrast */
   code.highlighter-rouge {
     background: #f1f5f9;
-    color: #0891b2;
-    border-color: #e2e8f0;
+    color: #0369a1;
+    border: 1px solid #e2e8f0;
   }
 }
