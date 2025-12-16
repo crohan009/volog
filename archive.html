@@ -23,7 +23,7 @@ title: Archive
 }
 
 .archive-description {
-    color: var(--text-muted, #71717a);
+    color: var(--text-muted, #a1a1aa);
     margin-bottom: 2rem;
     font-size: 1rem;
 }
@@ -53,7 +53,7 @@ title: Archive
 }
 
 .archive-list li a {
-    color: #fff;
+    color: var(--text-heading, #ffffff);
     font-weight: 500;
     text-decoration: none;
     flex: 1;
@@ -64,7 +64,7 @@ title: Archive
 }
 
 .archive-list li .date {
-    color: var(--text-dim, #52525b);
+    color: var(--text-dim, #71717a);
     font-size: 0.85rem;
     font-family: 'JetBrains Mono', monospace;
     margin-left: 1rem;
@@ -83,20 +83,8 @@ title: Archive
     }
 }
 
-body.light-mode .archive-list li {
-    background: var(--bg-card);
-    border-color: var(--border-color);
-}
-
+/* Light mode hover adjustments */
 body.light-mode .archive-list li:hover {
-    border-color: var(--accent-primary);
-}
-
-body.light-mode .archive-list li a {
-    color: #18181b;
-}
-
-body.light-mode .archive-list li a:hover {
-    color: var(--accent-primary);
+    box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
 }
 </style>
