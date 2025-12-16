@@ -66,10 +66,11 @@ title: About
 .about-content p {
     margin-bottom: 1.25rem;
     line-height: 1.8;
+    color: var(--text-body, #d4d4d8);
 }
 
 .about-content strong {
-    color: #fff;
+    color: var(--text-heading, #ffffff);
 }
 
 .about-content .highlight {
@@ -88,6 +89,7 @@ title: About
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    color: var(--text-body, #d4d4d8);
 }
 
 .interest-list .bullet {
@@ -104,7 +106,7 @@ title: About
 }
 
 .contact-section h3 {
-    color: #fff;
+    color: var(--text-heading, #ffffff);
     margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
@@ -118,6 +120,7 @@ title: About
 
 .contact-section p {
     margin: 0;
+    color: var(--text-body, #d4d4d8);
 }
 
 @media (max-width: 600px) {
@@ -129,18 +132,5 @@ title: About
     .about-header img {
         margin: 0 auto;
     }
-}
-
-body.light-mode .about-content strong {
-    color: #18181b;
-}
-
-body.light-mode .contact-section {
-    background: var(--bg-card);
-    border-color: var(--border-color);
-}
-
-body.light-mode .contact-section h3 {
-    color: #18181b;
 }
 </style>
