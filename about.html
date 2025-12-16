@@ -34,6 +34,7 @@ title: About
 .about-page {
     max-width: 700px;
     margin: 0 auto;
+    padding: 0 1rem;
 }
 
 /* Centered header with large profile photo */
@@ -49,6 +50,7 @@ title: About
 .about-header .profile-photo {
     width: 360px;
     height: 360px;
+    max-width: 100%;
     object-fit: contain;
     border-radius: 0;
     border: none;
@@ -67,6 +69,10 @@ title: About
     font-family: 'JetBrains Mono', monospace;
     font-size: 1.1rem;
     margin: 0;
+}
+
+.about-content {
+    padding: 0;
 }
 
 .about-content p {
@@ -93,7 +99,7 @@ title: About
 .interest-list li {
     padding: 0.6rem 0;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.75rem;
     color: var(--text-body, #d4d4d8);
 }
@@ -101,6 +107,7 @@ title: About
 .interest-list .bullet {
     color: var(--accent-primary, #00f0ff);
     font-weight: bold;
+    flex-shrink: 0;
 }
 
 .contact-section {
@@ -129,10 +136,74 @@ title: About
     color: var(--text-body, #d4d4d8);
 }
 
+/* Mobile Responsive Styles */
 @media (max-width: 600px) {
+    .about-page {
+        padding: 0;
+    }
+    
+    .about-header {
+        margin-bottom: 2rem;
+    }
+    
     .about-header .profile-photo {
         width: 280px;
         height: 280px;
+        margin-bottom: 1rem;
+    }
+    
+    .about-header .page-heading {
+        font-size: 1.5rem;
+    }
+    
+    .about-header .role {
+        font-size: 0.95rem;
+    }
+    
+    .about-content p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+    
+    .interest-list {
+        margin: 1rem 0;
+    }
+    
+    .interest-list li {
+        padding: 0.5rem 0;
+        font-size: 0.95rem;
+        gap: 0.5rem;
+    }
+    
+    .contact-section {
+        margin-top: 2rem;
+        padding: 1.25rem;
+        border-radius: 10px;
+    }
+    
+    .contact-section h3 {
+        font-size: 1.1rem;
+    }
+    
+    .contact-section p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 380px) {
+    .about-header .profile-photo {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .about-header .page-heading {
+        font-size: 1.3rem;
+    }
+    
+    .about-header .role {
+        font-size: 0.85rem;
     }
 }
 </style>
