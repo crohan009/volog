@@ -1,13 +1,102 @@
 ---
 layout: default
+title: Archive
 ---
-<div class="home other-pages">
+<div class="home other-pages archive-page">
   <h1 class="page-heading">Archive</h1>
-  <ul class="posts">
+  <p class="archive-description">A chronological collection of all posts on machine learning, transformers, and AI research.</p>
+  
+  <ul class="archive-list">
   {% for post in site.posts %}
     <li>
-      <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a> ({{ post.date | date: "%b %-d, %Y" }})
+      <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      <span class="date">{{ post.date | date: "%b %d, %Y" }}</span>
     </li>
   {% endfor %}
   </ul>
 </div>
+
+<style>
+.archive-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.archive-description {
+    color: var(--text-muted, #71717a);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.archive-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.archive-list li {
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    background: var(--bg-card, #161622);
+    border: 1px solid var(--border-color, #27272a);
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.archive-list li:hover {
+    border-color: var(--accent-primary, #00f0ff);
+    transform: translateX(5px);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+}
+
+.archive-list li a {
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    flex: 1;
+}
+
+.archive-list li a:hover {
+    color: var(--accent-primary, #00f0ff);
+}
+
+.archive-list li .date {
+    color: var(--text-dim, #52525b);
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    margin-left: 1rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .archive-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .archive-list li .date {
+        margin-left: 0;
+    }
+}
+
+body.light-mode .archive-list li {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+body.light-mode .archive-list li:hover {
+    border-color: var(--accent-primary);
+}
+
+body.light-mode .archive-list li a {
+    color: #18181b;
+}
+
+body.light-mode .archive-list li a:hover {
+    color: var(--accent-primary);
+}
+</style>

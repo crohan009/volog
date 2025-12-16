@@ -1,15 +1,146 @@
 ---
 layout: default
+title: About
 ---
 
-<div class='other-pages'>
+<div class="other-pages about-page">
+    <div class="about-header">
+        <img src="{{ '/assets/images/profile_photo.png' | relative_url }}" width="200" height="200" alt="Rohan" />
+        <div class="about-intro">
+            <h1 class="page-heading">About Me</h1>
+            <p class="role">Machine Learning Engineer</p>
+        </div>
+    </div>
 
-	<img src="{{ '/assets/images/profile_photo.png' | relative_url }}" width="320" height="320" />
-
-	<p></p>
-	<p> Hi! This is Rohan. This blog is my virtual sanctuary where I my note down my research findings, detail intriguing projects, 
-		summarize innovative ideas, and jot down quick notes from the realms of applied ML.</p>
-	<p></p>
-	<p></p>
-	<p>Feel free to <a href="mailto:cxrohan009@gmail.com">contact</a> me with any projects, ideas, or queries. </p>
+    <div class="about-content">
+        <p>Hi! I'm <strong>Rohan</strong>. Welcome to my digital garden where I document my journey through the fascinating world of applied machine learning.</p>
+        
+        <p>This blog serves as my virtual sanctuary where I note down research findings, detail intriguing projects, summarize innovative ideas, and jot down quick notes from the realms of <span class="highlight">applied ML</span>.</p>
+        
+        <p>My interests span across:</p>
+        <ul class="interest-list">
+            <li><span class="bullet">&#x2192;</span> Transformer architectures & attention mechanisms</li>
+            <li><span class="bullet">&#x2192;</span> Reinforcement learning & model-based RL</li>
+            <li><span class="bullet">&#x2192;</span> Multi-modal learning & code understanding</li>
+            <li><span class="bullet">&#x2192;</span> Computer vision & visual transformers</li>
+        </ul>
+        
+        <div class="contact-section">
+            <h3>Get in Touch</h3>
+            <p>Feel free to <a href="mailto:cxrohan009@gmail.com">reach out</a> with any projects, ideas, or queries. I'm always excited to discuss ML and collaborate on interesting problems!</p>
+        </div>
+    </div>
 </div>
+
+<style>
+.about-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.about-header img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.about-intro .page-heading {
+    margin-bottom: 0.5rem;
+}
+
+.about-intro .role {
+    color: var(--accent-primary, #00f0ff);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.about-content p {
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+}
+
+.about-content strong {
+    color: #fff;
+}
+
+.about-content .highlight {
+    color: var(--accent-primary, #00f0ff);
+    font-weight: 500;
+}
+
+.interest-list {
+    list-style: none;
+    margin: 1.5rem 0;
+    padding: 0;
+}
+
+.interest-list li {
+    padding: 0.6rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.interest-list .bullet {
+    color: var(--accent-primary, #00f0ff);
+    font-weight: bold;
+}
+
+.contact-section {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background: var(--bg-card, #161622);
+    border-radius: 12px;
+    border: 1px solid var(--border-color, #27272a);
+}
+
+.contact-section h3 {
+    color: #fff;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.contact-section h3::before {
+    content: '\2709';
+    color: var(--accent-primary, #00f0ff);
+}
+
+.contact-section p {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .about-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .about-header img {
+        margin: 0 auto;
+    }
+}
+
+body.light-mode .about-content strong {
+    color: #18181b;
+}
+
+body.light-mode .contact-section {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+}
+
+body.light-mode .contact-section h3 {
+    color: #18181b;
+}
+</style>
