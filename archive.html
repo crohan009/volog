@@ -71,15 +71,36 @@ title: Archive
     white-space: nowrap;
 }
 
+/* Mobile Responsive Styles */
 @media (max-width: 600px) {
+    .archive-page {
+        padding: 0;
+    }
+    
+    .archive-description {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
     .archive-list li {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .archive-list li:hover {
+        transform: translateX(3px);
+    }
+    
+    .archive-list li a {
+        font-size: 0.95rem;
+        line-height: 1.4;
     }
     
     .archive-list li .date {
         margin-left: 0;
+        font-size: 0.75rem;
     }
 }
 
