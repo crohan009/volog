@@ -1,7 +1,9 @@
 <header class="site-header" role="banner" id='header-bar'>
     <div class="wrapper">
         <a class="site-title" href="{{ "/" | relative_url }}">
-            <span class="site-title-text">{{ site.title | escape }}</span>
+            {% assign title_escaped = site.title | escape %}
+            {% assign title_with_highlight = title_escaped | replace: '`eigen`', '<span class="highlight">ei &gt;= n</span>' | replace: 'eigen', '<span class="highlight">ei &gt;= n</span>' %}
+            <span class="site-title-text">{{ title_with_highlight }}</span>
         </a>
         
         <!-- Hamburger Menu Button (Mobile) -->

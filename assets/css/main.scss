@@ -16,6 +16,108 @@ body {
   color: var(--text-color);
 }
 
+/* Site title: allow inline `.highlight` without Rouge code-block styling */
+.site-title .highlight {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  display: inline;
+  color: var(--accent-primary);
+  font-style: italic;
+  /* LaTeX-ish math font stack (best-effort across OSes) */
+  font-family: "STIX Two Math", "Cambria Math", "Latin Modern Math", "STIXGeneral",
+    "Times New Roman", serif;
+  letter-spacing: -0.2px;
+}
+
+/* ========================================
+   Post layout: TOC rail
+   - Mobile/tablet: TOC appears above content (normal flow)
+   - Desktop (wide): TOC becomes a fixed rail on the far-left, outside the content column
+   Requires JS to move `.table-of-content` into `.post-toc-sidebar`.
+   ======================================== */
+.post-toc-sidebar[hidden] {
+  display: none;
+}
+
+.post-toc-sidebar {
+  margin: 1.25rem 0;
+}
+
+.post-toc-sidebar .post-toc-title {
+  margin: 0 0 0.75rem 0;
+}
+
+.post-toc-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.post-toc-toggle {
+  appearance: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-body);
+  border-radius: 8px;
+  width: 32px;
+  height: 28px;
+  line-height: 1;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.post-toc-toggle:hover {
+  border-color: var(--accent-primary);
+}
+
+/* Default (mobile/tablet): TOC appears above content */
+.post .post-layout {
+  display: block;
+}
+
+/* Desktop: fixed TOC rail in the left gutter (doesn't shrink the content column) */
+@media screen and (min-width: 1300px) {
+  .post.has-toc .post-toc-sidebar {
+    position: fixed;
+    /* Place it in the left margin outside the centered content column (850px). */
+    left: max(12px, calc((100vw - 850px) / 2 - 280px - 24px));
+    top: 90px; /* below sticky header */
+    width: 280px;
+    max-height: calc(100vh - 110px);
+    overflow: auto;
+    z-index: 50;
+
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.75rem 0.9rem;
+  }
+
+  .post.has-toc .post-toc-sidebar .table-of-content {
+    margin: 0;
+  }
+
+  /* Collapsed state (minimized rail) */
+  body.toc-collapsed .post.has-toc .post-toc-sidebar {
+    width: 44px;
+    padding: 0.6rem 0.4rem;
+    overflow: hidden;
+  }
+
+  body.toc-collapsed .post.has-toc .post-toc-sidebar .post-toc-header {
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  body.toc-collapsed .post.has-toc .post-toc-sidebar .post-toc-title,
+  body.toc-collapsed .post.has-toc .post-toc-sidebar .table-of-content {
+    display: none;
+  }
+}
+
 .page-content {
   flex: 1 0 auto;
 }
