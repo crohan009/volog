@@ -5,7 +5,7 @@ title: About
 
 <div class="other-pages about-page">
     <div class="about-header">
-        <img src="{{ '/assets/images/profile_photo.png' | relative_url }}" width="200" height="200" alt="Rohan" />
+        <img src="{{ '/assets/images/profile_photo.png' | relative_url }}" width="200" height="200" alt="Rohan" class="profile-photo" />
         <div class="about-intro">
             <h1 class="page-heading">About Me</h1>
             <p class="role">Machine Learning Engineer</p>
@@ -46,10 +46,16 @@ title: About
     flex-wrap: wrap;
 }
 
-.about-header img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
+/* Profile photo - transparent background blends with page */
+.about-header .profile-photo {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    margin: 0;
 }
 
 .about-intro .page-heading {
@@ -129,7 +135,7 @@ title: About
         text-align: center;
     }
     
-    .about-header img {
+    .about-header .profile-photo {
         margin: 0 auto;
     }
 }
