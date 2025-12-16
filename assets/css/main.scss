@@ -186,11 +186,9 @@ body {
   }
   
   /* Theme toggle at bottom of mobile menu */
-  .site-nav .theme-toggle {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color, #27272a);
-    justify-content: center;
+  .site-nav .theme-toggle-btn {
+    margin: 1rem auto 0;
+    border-top: none;
   }
 }
 
