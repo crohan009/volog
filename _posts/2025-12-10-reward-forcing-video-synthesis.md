@@ -3,7 +3,7 @@ layout: post
 comments: false
 title: "Reward Forcing: Real-Time Controllable Streaming Video Synthesis"
 subtitle: "A Technical Deep Dive into the Evolution of Video Diffusion Models"
-date: 2025-01-15 00:01:01
+date: 2025-12-10 00:01:01
 tags: paper-review, diffusion-models, video-generation, AI, ML, transformers
 ---
 
