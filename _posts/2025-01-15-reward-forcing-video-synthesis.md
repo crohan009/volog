@@ -24,7 +24,21 @@ tags: paper-review, diffusion-models, video-generation, AI, ML, transformers
 
 The ultimate goal of modern video generation research is to produce long, coherent, high-fidelity video in real-time, with the ability to interactively steer the narrative and control dynamic properties like motion. This ambitious objective requires solving multiple interconnected challenges: **quality**, **speed**, **streaming capability**, and **controllability**.
 
+![Reward Forcing Overview]({{ '/assets/images/reward_forcing/01_overview.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 1. The progression from noise to coherent video through key stages: DDPM, DMD/AR, and Self-Forcing/Sinks.*
+
 **Reward Forcing** represents a synthesis of innovations that addresses all these challenges. To understand it, we need to trace the technical roadmap that led to its development.
+
+---
+
+## **The Roadmap: A Directed Graph of Innovation**
+
+Each technology in this journey builds upon the last, solving a critical limitation. The path is chronological to understand the synthesis that is "Reward Forcing."
+
+![Innovation Roadmap]({{ '/assets/images/reward_forcing/02_roadmap.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 2. The directed graph showing how technologies build upon each other chronologically.*
 
 ---
 
@@ -33,6 +47,10 @@ The ultimate goal of modern video generation research is to produce long, cohere
 ### The DDPM Revolution
 
 Denoising Diffusion Probabilistic Models (DDPMs) established the foundation for unprecedented sample quality, surpassing GANs with more stable training objectives.
+
+![DDPM Mechanics]({{ '/assets/images/reward_forcing/03_ddpm.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 3. Core mechanics of DDPM: forward process (noise addition) and reverse process (denoising).*
 
 #### Forward Process (Fixed)
 The forward process gradually adds Gaussian noise to data:
@@ -43,10 +61,10 @@ This allows direct sampling at any timestep:
 
 $$x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1 - \bar{\alpha}_t}\epsilon$$
 
-where $\bar{\alpha}_t = \prod_{s=1}^t (1 - \beta_s)$.
+where $$\bar{\alpha}_t = \prod_{s=1}^t (1 - \beta_s)$$.
 
 #### Reverse Process (Learned)
-A neural network $\epsilon_\theta(x_t, t)$ learns to predict the noise, enabling iterative denoising from $X_T$ back to $X_0$.
+A neural network $$\epsilon_\theta(x_t, t)$$ learns to predict the noise, enabling iterative denoising from $$X_T$$ back to $$X_0$$.
 
 #### Training Objective
 
@@ -66,6 +84,10 @@ $$L_{simple} = \mathbb{E}_{t, x_0, \epsilon} \left[ \left\| \epsilon - \epsilon_
 
 DMD addresses the massive computational cost of DDPMs by training a "student" model to directly map noise to clean samples in a single step.
 
+![DMD Distillation]({{ '/assets/images/reward_forcing/04_dmd.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 4. DMD distillation: Teacher (multi-step DDPM) vs Student (one-step generator).*
+
 #### Core Idea
 Instead of a simple L2 loss on individual samples, DMD minimizes the divergence between the output distributions of teacher and student models. This is achieved by matching the scores (gradients of log-probability) of both distributions.
 
@@ -84,7 +106,11 @@ Instead of a simple L2 loss on individual samples, DMD minimizes the divergence 
 
 Standard video diffusion models use **bidirectional attention**, processing all frames simultaneously. This approach is:
 - **Non-causal**: Cannot generate frames sequentially
-- **Computationally explosive**: $O(N^2)$ complexity with video length
+- **Computationally explosive**: $$O(N^2)$$ complexity with video length
+
+![Attention Comparison]({{ '/assets/images/reward_forcing/05_attention.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 5. Bidirectional attention vs Causal attention: the shift required for streaming video.*
 
 ### The Solution: Causal Attention
 
@@ -94,7 +120,7 @@ $$P(F_{1:N}) = \prod_{i=1}^N p(F_i | F_{<i})$$
 
 **Benefits:**
 - **Causal**: Frames processed sequentially
-- **Linear complexity**: $O(N)$ with video length
+- **Linear complexity**: $$O(N)$$ with video length
 - **Enables KV-Cache**: Dramatically reduces redundant computation
 
 ### New Challenges Introduced
@@ -111,6 +137,10 @@ $$P(F_{1:N}) = \prod_{i=1}^N p(F_i | F_{<i})$$
 
 Standard autoregressive training (Teacher Forcing) creates a fundamental mismatch: the model never sees its own errors during training, leading to catastrophic error accumulation during long inference rollouts.
 
+![Self-Forcing Loop]({{ '/assets/images/reward_forcing/06_self_forcing.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 6. The Self-Forcing training loop: autoregressive generation with distribution-matching loss.*
+
 ### Core Innovation
 
 **Self-Forcing** bridges this gap by exposing the model to its own generated distribution during training:
@@ -119,7 +149,7 @@ Standard autoregressive training (Teacher Forcing) creates a fundamental mismatc
 2. Each frame is conditioned on previously generated frames
 3. A **distribution-matching loss** (DMD, SID, or GAN) is applied to the entire generated sequence
 
-This forces the generator's output distribution $p_\theta(X_{1:N})$ to match the real data distribution $p_{data}(X_{1:N})$.
+This forces the generator's output distribution $$p_\theta(X_{1:N})$$ to match the real data distribution $$p_{data}(X_{1:N})$$.
 
 **Contribution to Reward Forcing:** Provides the stable training paradigm that enables robust, long-horizon generation.
 
@@ -133,6 +163,10 @@ Simple sliding windows or finite KV caches cause context decay. The model forget
 - Flickering
 - Object disappearance
 - Semantic drift
+
+![Memory Solutions]({{ '/assets/images/reward_forcing/07_memory.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 7. Memory solutions: Streaming Long Tuning and the Frame Sink mechanism.*
 
 ### Early Solution: Frame Sink
 
@@ -148,6 +182,10 @@ Simple sliding windows or finite KV caches cause context decay. The model forget
 **Reward Forcing** introduces a **dynamic global memory** via Exponential Moving Average:
 
 $$EMA\_Sink\_KV = (1 - \alpha) \cdot EMA\_Sink\_KV + \alpha \cdot Evicted\_KV$$
+
+![EMA-Sink]({{ '/assets/images/reward_forcing/08_ema_sink.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 8. The EMA-Sink: dynamic global memory that updates with evicted KV tokens.*
 
 #### How It Works
 
@@ -170,9 +208,13 @@ $$EMA\_Sink\_KV = (1 - \alpha) \cdot EMA\_Sink\_KV + \alpha \cdot Evicted\_KV$$
 
 We can generate long, consistent videos—but how do we control their dynamics? How can we bias the model toward high-action sequences or aesthetically pleasing motion?
 
+![RLHF Framework]({{ '/assets/images/reward_forcing/09_rlhf.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 9. The RLHF framework: Reward-Weighted Regression (RWR) and Direct Preference Optimization (DPO).*
+
 ### The RLHF Framework
 
-1. **Learn Preferences**: Train a Reward Model $r(x, y)$ on human preference data
+1. **Learn Preferences**: Train a Reward Model $$r(x, y)$$ on human preference data
 2. **Align the Policy**: Fine-tune generation to maximize reward while staying close to reference:
 
 $$\max_{p_\theta} \mathbb{E}_{x_0 \sim p_\theta} [r(x_0, y)] - \beta D_{KL}[p_\theta || P_{ref}]$$
@@ -187,7 +229,7 @@ $$L_{RWR}(\theta) = \mathbb{E}[\exp(r(x_0, y)) ||v - v_\theta(x_t, t, y)||^2]$$
 *"Do more of what gets high rewards."*
 
 #### Direct Preference Optimization (DPO)
-An RL-free alternative working directly on preference pairs $(x_w, x_l)$:
+An RL-free alternative working directly on preference pairs $$(x_w, x_l)$$:
 
 $$L_{DPO}(\pi_\theta; \pi_{ref}) = \mathbb{E}_{(x,y_w,y_l) \sim D} \left[ \log \sigma\left(\beta \log \frac{\pi_\theta(y_w|x)}{\pi_{ref}(y_w|x)} - \beta \log \frac{\pi_\theta(y_l|x)}{\pi_{ref}(y_l|x)}\right) \right]$$
 
@@ -198,6 +240,10 @@ $$L_{DPO}(\pi_\theta; \pi_{ref}) = \mathbb{E}_{(x,y_w,y_l) \sim D} \left[ \log \
 ### The Innovation
 
 Standard DMD is "unbiased"—it distills the teacher's entire distribution. **Rewarded-DMD (Re-DMD)** modifies this to incorporate reward signals.
+
+![Rewarded-DMD]({{ '/assets/images/reward_forcing/10_rewarded_dmd.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 10. Rewarded-DMD: incorporating reward weights into the distillation process.*
 
 ### Core Idea
 
@@ -227,6 +273,10 @@ The one-step student model doesn't just replicate the teacher—its output distr
 | **Memory System** | EMA-Sink + Local KV-Cache | Long-range consistency |
 | **Distillation** | Rewarded-DMD | One-step generation biased toward rewards |
 
+![Reward Forcing Training Loop]({{ '/assets/images/reward_forcing/11_training_loop.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 11. The complete Reward Forcing training loop: integrating all components.*
+
 ### Training Loop
 
 1. **Multi-step Teacher** generates batch of video samples
@@ -239,6 +289,10 @@ The one-step student model doesn't just replicate the teacher—its output distr
 ---
 
 ## **9. Comparison with Prior Methods**
+
+![Comparison]({{ '/assets/images/reward_forcing/12_comparison.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 12. How Reward Forcing builds upon Self-Forcing and LongLive.*
 
 ### vs. Self-Forcing
 
@@ -259,6 +313,10 @@ The one-step student model doesn't just replicate the teacher—its output distr
 
 ## **10. Capabilities Showcase**
 
+![Showcase]({{ '/assets/images/reward_forcing/13_showcase.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 13. Showcase of Reward Forcing capabilities: high-motion dynamics, coherence, and control.*
+
 Reward Forcing enables several breakthrough capabilities:
 
 1. **High-Motion Dynamics**: Rewarded-DMD naturally biases toward energetic, dynamic video content
@@ -272,6 +330,10 @@ Reward Forcing enables several breakthrough capabilities:
 ---
 
 ## **11. Future Directions**
+
+![Future Directions]({{ '/assets/images/reward_forcing/14_future.png' | relative_url }})
+{: style="width: 100%;" class="center"}
+*Fig. 14. Future research directions for Reward Forcing.*
 
 ### Multi-Reward Optimization
 Balancing competing rewards simultaneously (motion, aesthetics, text-alignment)
