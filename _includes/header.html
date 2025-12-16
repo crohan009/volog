@@ -3,13 +3,24 @@
         <a class="site-title" href="{{ "/" | relative_url }}">
             <span class="site-title-text">{{ site.title | escape }}</span>
         </a>
+        
+        <!-- Hamburger Menu Button (Mobile) -->
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger" class="menu-icon" aria-label="Toggle navigation">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </label>
+        
         <nav class="site-nav">
-            <a class="page-link" href="{{ '/archive.html' | relative_url }}">
-                <span class="nav-icon">&#x1F4DA;</span><span class="nav-text">Archive</span>
-            </a>
-            <a class="page-link" href="{{ '/about.html' | relative_url }}">
-                <span class="nav-icon">&#x1F464;</span><span class="nav-text">About</span>
-            </a>
+            <div class="nav-links">
+                <a class="page-link" href="{{ '/archive.html' | relative_url }}">
+                    <span class="nav-icon">&#x1F4DA;</span><span class="nav-text">Archive</span>
+                </a>
+                <a class="page-link" href="{{ '/about.html' | relative_url }}">
+                    <span class="nav-icon">&#x1F464;</span><span class="nav-text">About</span>
+                </a>
+            </div>
             <div class="theme-toggle">
                 <input type="checkbox" onclick="toggleDarkMode()" id="switch" name="theme" />
                 <label for="switch" class="toggle-label" aria-label="Toggle dark mode">
