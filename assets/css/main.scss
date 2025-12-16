@@ -117,8 +117,8 @@ body {
 
 input:checked + .toggle-label::before {
   transform: translateX(28px);
-  background: linear-gradient(135deg, #f472b6, #fbbf24);
-  box-shadow: 0 0 10px rgba(244, 114, 182, 0.5);
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
 input:checked + .toggle-label .sun {
@@ -129,56 +129,83 @@ input:checked + .toggle-label .moon {
   opacity: 0.5;
 }
 
-/* CSS Custom Properties for theming */
+/* ========================================
+   CSS Custom Properties - DARK MODE (Default)
+   ======================================== */
 :root {
   --bg-primary: #0a0a0f;
   --bg-secondary: #111119;
   --bg-card: #161622;
   --bg-elevated: #1a1a28;
   --text-color: #e4e4e7;
-  --text-muted: #71717a;
-  --text-dim: #52525b;
+  --text-heading: #ffffff;
+  --text-body: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --text-dim: #71717a;
   --accent-primary: #00f0ff;
   --accent-secondary: #7c3aed;
   --accent-tertiary: #f472b6;
   --border-color: #27272a;
+  --link-color: #00f0ff;
+  --link-hover: #67e8f9;
 }
 
-/* Light mode overrides (if toggle is checked) */
+/* ========================================
+   LIGHT MODE - High Contrast Colors
+   ======================================== */
 body.light-mode {
-  --bg-primary: #fafafa;
-  --bg-secondary: #f4f4f5;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
   --bg-card: #ffffff;
-  --bg-elevated: #f9fafb;
-  --text-color: #18181b;
-  --text-muted: #71717a;
-  --text-dim: #a1a1aa;
-  --accent-primary: #0891b2;
-  --accent-secondary: #7c3aed;
-  --accent-tertiary: #ec4899;
-  --border-color: #e4e4e7;
+  --bg-elevated: #f1f5f9;
+  --text-color: #0f172a;
+  --text-heading: #020617;
+  --text-body: #1e293b;
+  --text-muted: #475569;
+  --text-dim: #64748b;
+  --accent-primary: #0369a1;
+  --accent-secondary: #6d28d9;
+  --accent-tertiary: #be185d;
+  --border-color: #e2e8f0;
+  --link-color: #0369a1;
+  --link-hover: #0284c7;
 }
 
+/* ========================================
+   LIGHT MODE - Core Styles
+   ======================================== */
 body.light-mode {
   background-color: var(--bg-primary);
-  color: var(--text-color);
+  color: var(--text-body);
 }
 
+/* Subtle background gradient for light mode */
+body.light-mode::before {
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(3, 105, 161, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(109, 40, 217, 0.02) 0%, transparent 50%);
+}
+
+/* ========================================
+   LIGHT MODE - Header
+   ======================================== */
 body.light-mode .site-header {
-  background: rgba(250, 250, 250, 0.9);
-  border-bottom-color: var(--border-color);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
 }
 
 body.light-mode .site-title {
-  color: #18181b;
-}
-
-body.light-mode .site-title:hover {
-  color: var(--accent-primary);
+  color: var(--text-heading);
 }
 
 body.light-mode .site-title::before {
   color: var(--accent-primary);
+}
+
+body.light-mode .site-title:hover {
+  color: var(--accent-primary);
+  text-shadow: none;
 }
 
 body.light-mode .page-link {
@@ -187,121 +214,398 @@ body.light-mode .page-link {
 
 body.light-mode .page-link:hover {
   color: var(--accent-primary);
-  background: rgba(8, 145, 178, 0.1);
+  background: rgba(3, 105, 161, 0.08);
+  border-color: rgba(3, 105, 161, 0.2);
 }
 
+/* ========================================
+   LIGHT MODE - Headings (High Contrast)
+   ======================================== */
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4,
+body.light-mode h5,
+body.light-mode h6,
 body.light-mode .page-heading,
 body.light-mode .post-title,
 body.light-mode .post-link,
-body.light-mode h1, 
-body.light-mode h2, 
-body.light-mode h3, 
-body.light-mode h4, 
-body.light-mode h5, 
-body.light-mode h6 {
-  color: #18181b;
+body.light-mode .hero-title {
+  color: var(--text-heading);
+  text-shadow: none;
 }
 
+body.light-mode .page-heading::before,
+body.light-mode .post-content h2::before {
+  color: var(--accent-primary);
+}
+
+body.light-mode .hero-title .highlight {
+  color: var(--accent-primary);
+  text-shadow: none;
+}
+
+body.light-mode .hero-subtitle {
+  color: var(--text-muted);
+}
+
+/* ========================================
+   LIGHT MODE - Body Content (High Contrast)
+   ======================================== */
+body.light-mode p,
+body.light-mode li,
+body.light-mode span,
+body.light-mode .post-excerpt {
+  color: var(--text-body);
+}
+
+body.light-mode strong,
+body.light-mode b {
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
+body.light-mode em,
+body.light-mode i {
+  color: var(--text-body);
+}
+
+/* ========================================
+   LIGHT MODE - Links
+   ======================================== */
+body.light-mode a {
+  color: var(--link-color);
+}
+
+body.light-mode a:hover {
+  color: var(--link-hover);
+  text-shadow: none;
+}
+
+body.light-mode .post-link {
+  color: var(--text-heading);
+}
+
+body.light-mode .post-link:hover {
+  color: var(--accent-primary);
+  text-shadow: none;
+}
+
+/* ========================================
+   LIGHT MODE - Post Cards
+   ======================================== */
 body.light-mode .post-list > li {
   background: var(--bg-card);
-  border-color: var(--border-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .post-list > li:hover {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 20px rgba(8, 145, 178, 0.15);
+  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.12);
+}
+
+body.light-mode .post-meta {
+  color: var(--text-dim);
+}
+
+body.light-mode .post-meta time {
+  color: var(--text-dim);
 }
 
 body.light-mode .post-meta a.post-tag {
   background: var(--bg-elevated);
-  border-color: var(--border-color);
+  border: 1px solid var(--border-color);
   color: var(--text-muted);
 }
 
 body.light-mode .post-meta a.post-tag:hover {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
+  background: rgba(3, 105, 161, 0.08);
+  box-shadow: none;
 }
 
-body.light-mode pre,
+/* ========================================
+   LIGHT MODE - Post Content
+   ======================================== */
+body.light-mode .post-content {
+  color: var(--text-body);
+}
+
+body.light-mode .post-content p {
+  color: var(--text-body);
+}
+
+body.light-mode .post-content li {
+  color: var(--text-body);
+}
+
+body.light-mode .post-content a {
+  color: var(--link-color);
+  border-bottom-color: rgba(3, 105, 161, 0.3);
+}
+
+body.light-mode .post-content a:hover {
+  color: var(--link-hover);
+  border-bottom-color: var(--link-hover);
+}
+
+body.light-mode .post-content h2 {
+  color: var(--text-heading);
+  border-bottom-color: var(--border-color);
+}
+
+body.light-mode .post-content h3,
+body.light-mode .post-content h4 {
+  color: var(--text-heading);
+}
+
+/* ========================================
+   LIGHT MODE - Code Blocks
+   ======================================== */
+body.light-mode pre {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+}
+
+body.light-mode pre::before {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+}
+
+body.light-mode pre code {
+  color: var(--text-body);
+  background: transparent;
+}
+
 body.light-mode code {
-  background: #f4f4f5;
-  border-color: #e4e4e7;
+  background: #f1f5f9;
+  color: #0369a1;
+  border: 1px solid var(--border-color);
 }
 
-body.light-mode code {
-  color: #0891b2;
-}
-
+/* ========================================
+   LIGHT MODE - Blockquotes
+   ======================================== */
 body.light-mode blockquote {
-  background: #f4f4f5;
+  background: var(--bg-elevated);
   border-left-color: var(--accent-primary);
+  color: var(--text-muted);
 }
 
+body.light-mode blockquote p {
+  color: var(--text-muted);
+}
+
+/* ========================================
+   LIGHT MODE - Table of Contents
+   ======================================== */
+body.light-mode .table-of-content {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+}
+
+body.light-mode .table-of-content li {
+  color: var(--text-muted);
+}
+
+body.light-mode .table-of-content li::before {
+  color: var(--accent-primary);
+}
+
+body.light-mode .table-of-content li a {
+  color: var(--text-body);
+}
+
+body.light-mode .table-of-content li a:hover {
+  color: var(--accent-primary);
+}
+
+/* ========================================
+   LIGHT MODE - Navigation
+   ======================================== */
+body.light-mode .page-navigation a {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-body);
+}
+
+body.light-mode .page-navigation a:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+}
+
+/* ========================================
+   LIGHT MODE - Footer
+   ======================================== */
 body.light-mode .site-footer {
   background: var(--bg-secondary);
-  border-top-color: var(--border-color);
+  border-top: 1px solid var(--border-color);
+}
+
+body.light-mode .site-footer .footer-text {
+  color: var(--text-dim);
 }
 
 body.light-mode .social-link {
   background: var(--bg-card);
-  border-color: var(--border-color);
+  border: 1px solid var(--border-color);
 }
 
 body.light-mode .social-link:hover {
   border-color: var(--accent-primary);
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.15);
 }
 
 body.light-mode .social-link img {
   filter: none;
+  opacity: 0.7;
 }
 
-body.light-mode .toggle-label {
-  background: #e4e4e7;
-  border-color: #d4d4d8;
+body.light-mode .social-link:hover img {
+  opacity: 1;
 }
 
-body.light-mode::before {
-  background: 
-    radial-gradient(ellipse at 20% 20%, rgba(8, 145, 178, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(124, 58, 237, 0.04) 0%, transparent 50%);
-}
-
-body.light-mode .table-of-content {
-  background: var(--bg-card);
-  border-color: var(--border-color);
-}
-
-body.light-mode .page-navigation a {
-  background: var(--bg-card);
-  border-color: var(--border-color);
+/* ========================================
+   LIGHT MODE - About Page
+   ======================================== */
+body.light-mode .other-pages p {
+  color: var(--text-body);
 }
 
 body.light-mode .other-pages img {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 20px rgba(8, 145, 178, 0.3);
+  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.15);
 }
 
-body.light-mode .other-pages p {
+body.light-mode .about-intro .role {
+  color: var(--accent-primary);
+}
+
+body.light-mode .interest-list li {
+  color: var(--text-body);
+}
+
+body.light-mode .interest-list .bullet {
+  color: var(--accent-primary);
+}
+
+body.light-mode .contact-section {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+}
+
+body.light-mode .contact-section h3 {
+  color: var(--text-heading);
+}
+
+body.light-mode .contact-section h3::before {
+  color: var(--accent-primary);
+}
+
+body.light-mode .contact-section p {
+  color: var(--text-body);
+}
+
+/* ========================================
+   LIGHT MODE - Archive Page
+   ======================================== */
+body.light-mode .archive-description {
   color: var(--text-muted);
 }
 
-body.light-mode .post-content {
-  color: #27272a;
+body.light-mode .archive-list li {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
 }
 
-body.light-mode .post-content strong {
-  color: #18181b;
+body.light-mode .archive-list li:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
 }
 
-/* Smooth color transitions */
+body.light-mode .archive-list li a {
+  color: var(--text-heading);
+}
+
+body.light-mode .archive-list li a:hover {
+  color: var(--accent-primary);
+}
+
+body.light-mode .archive-list li .date {
+  color: var(--text-dim);
+}
+
+/* ========================================
+   LIGHT MODE - Tag Pages
+   ======================================== */
+body.light-mode .tag-description {
+  color: var(--text-muted);
+}
+
+body.light-mode .tag-highlight {
+  color: var(--accent-primary);
+  background: rgba(3, 105, 161, 0.1);
+}
+
+/* ========================================
+   LIGHT MODE - Theme Toggle
+   ======================================== */
+body.light-mode .toggle-label {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+body.light-mode .toggle-label:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(3, 105, 161, 0.2);
+}
+
+/* ========================================
+   LIGHT MODE - Horizontal Rules
+   ======================================== */
+body.light-mode hr {
+  border-top-color: var(--border-color);
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+}
+
+/* ========================================
+   LIGHT MODE - Selection
+   ======================================== */
+body.light-mode ::selection {
+  background: rgba(3, 105, 161, 0.2);
+  color: var(--text-heading);
+}
+
+/* ========================================
+   LIGHT MODE - Scrollbar
+   ======================================== */
+body.light-mode ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+body.light-mode ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+body.light-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* ========================================
+   Smooth Transitions
+   ======================================== */
 body,
 .site-header,
 .site-footer,
 .post-list > li,
 .page-link,
 .toggle-label,
-pre, code, blockquote {
+pre, code, blockquote,
+a, p, h1, h2, h3, h4, h5, h6,
+.post-content, .post-excerpt,
+.archive-list li, .table-of-content,
+.other-pages, .contact-section {
   transition: background-color 0.3s ease, 
               color 0.3s ease, 
               border-color 0.3s ease,
