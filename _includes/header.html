@@ -1,16 +1,18 @@
 <header class="site-header" role="banner" id='header-bar'>
     <div class="wrapper">
-        <a class="site-title" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+        <a class="site-title" href="{{ "/" | relative_url }}">
+            <span class="site-title-text">{{ site.title | escape }}</span>
+        </a>
         <nav class="site-nav">
             <a class="page-link" href="{{ '/archive.html' | relative_url }}">
-                <span class="nav-icon">&#x1F4DA;</span> Archive
+                <span class="nav-icon">&#x1F4DA;</span><span class="nav-text">Archive</span>
             </a>
             <a class="page-link" href="{{ '/about.html' | relative_url }}">
-                <span class="nav-icon">&#x1F464;</span> About
+                <span class="nav-icon">&#x1F464;</span><span class="nav-text">About</span>
             </a>
             <div class="theme-toggle">
                 <input type="checkbox" onclick="toggleDarkMode()" id="switch" name="theme" />
-                <label for="switch" class="toggle-label">
+                <label for="switch" class="toggle-label" aria-label="Toggle dark mode">
                     <span class="toggle-icon sun">&#x2600;</span>
                     <span class="toggle-icon moon">&#x1F319;</span>
                 </label>
