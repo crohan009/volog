@@ -1,206 +1,150 @@
-.highlight table td { padding: 3px; }
-.highlight table pre { margin: 0; }
-.highlight .cm {
-  color: #999988;
-  font-style: italic;
+/* Dark Techy Syntax Highlighting */
+.highlight {
+  background: #161622;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  
+  .highlighter-rouge & {
+    background: #161622;
+  }
+  
+  pre {
+    margin: 0;
+    padding: 1.25rem;
+  }
+  
+  /* Comments */
+  .c, .c1, .cm, .cs { color: #6b7280; font-style: italic; }
+  
+  /* Errors */
+  .err { color: #f87171; background-color: transparent; }
+  
+  /* Keywords */
+  .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #c084fc; font-weight: 500; }
+  
+  /* Names */
+  .n { color: #e4e4e7; }
+  .na { color: #67e8f9; }
+  .nb { color: #fbbf24; }
+  .nc { color: #34d399; font-weight: 600; }
+  .nd { color: #f472b6; }
+  .ne { color: #f87171; font-weight: 600; }
+  .nf { color: #60a5fa; font-weight: 500; }
+  .ni { color: #a78bfa; }
+  .nl { color: #fbbf24; }
+  .nn { color: #34d399; }
+  .no { color: #f87171; }
+  .nt { color: #f472b6; }
+  .nv { color: #67e8f9; }
+  
+  /* Operators */
+  .o, .ow { color: #f472b6; }
+  
+  /* Punctuation */
+  .p { color: #a1a1aa; }
+  
+  /* Strings */
+  .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss { color: #86efac; }
+  
+  /* Numbers */
+  .m, .mi, .mf, .mh, .mo, .il { color: #fbbf24; }
+  
+  /* Generic */
+  .gd { color: #f87171; background-color: rgba(248, 113, 113, 0.1); }
+  .ge { font-style: italic; }
+  .gh { color: #e4e4e7; font-weight: 700; }
+  .gi { color: #86efac; background-color: rgba(134, 239, 172, 0.1); }
+  .go { color: #6b7280; }
+  .gp { color: #71717a; font-weight: 700; }
+  .gs { font-weight: 700; }
+  .gu { color: #67e8f9; font-weight: 700; }
+  .gt { color: #f87171; }
+  
+  /* Line numbers */
+  .lineno { 
+    color: #52525b; 
+    padding-right: 1rem; 
+    border-right: 1px solid #27272a;
+    margin-right: 1rem;
+    user-select: none;
+  }
+  
+  /* Variable */
+  .v, .vi, .vc, .vg { color: #67e8f9; }
+  
+  /* Whitespace */
+  .w { color: #e4e4e7; }
 }
-.highlight .cp {
-  color: #999999;
-  font-weight: bold;
+
+/* Inline code */
+code.highlighter-rouge {
+  background: #1a1a28;
+  color: #00f0ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  border: 1px solid #27272a;
 }
-.highlight .c1 {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-.highlight .c, .highlight .cd {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-.highlight .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-.highlight .ge {
-  color: #000000;
-  font-style: italic;
-}
-.highlight .gr {
-  color: #aa0000;
-}
-.highlight .gh {
-  color: #999999;
-}
-.highlight .gi {
-  color: #000000;
-  background-color: #ddffdd;
-}
-.highlight .go {
-  color: #888888;
-}
-.highlight .gp {
-  color: #555555;
-}
-.highlight .gs {
-  font-weight: bold;
-}
-.highlight .gu {
-  color: #aaaaaa;
-}
-.highlight .gt {
-  color: #aa0000;
-}
-.highlight .kc {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kd {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kn {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kp {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kr {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kt {
-  color: #445588;
-  font-weight: bold;
-}
-.highlight .k, .highlight .kv {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .mf {
-  color: #009999;
-}
-.highlight .mh {
-  color: #009999;
-}
-.highlight .il {
-  color: #009999;
-}
-.highlight .mi {
-  color: #009999;
-}
-.highlight .mo {
-  color: #009999;
-}
-.highlight .m, .highlight .mb, .highlight .mx {
-  color: #009999;
-}
-.highlight .sb {
-  color: #d14;
-}
-.highlight .sc {
-  color: #d14;
-}
-.highlight .sd {
-  color: #d14;
-}
-.highlight .s2 {
-  color: #d14;
-}
-.highlight .se {
-  color: #d14;
-}
-.highlight .sh {
-  color: #d14;
-}
-.highlight .si {
-  color: #d14;
-}
-.highlight .sx {
-  color: #d14;
-}
-.highlight .sr {
-  color: #009926;
-}
-.highlight .s1 {
-  color: #d14;
-}
-.highlight .ss {
-  color: #990073;
-}
-.highlight .s {
-  color: #d14;
-}
-.highlight .na {
-  color: #008080;
-}
-.highlight .bp {
-  color: #999999;
-}
-.highlight .nb {
-  color: #0086B3;
-}
-.highlight .nc {
-  color: #445588;
-  font-weight: bold;
-}
-.highlight .no {
-  color: #008080;
-}
-.highlight .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-.highlight .ni {
-  color: #800080;
-}
-.highlight .ne {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nf {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nl {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nn {
-  color: #555555;
-}
-.highlight .nt {
-  color: #000080;
-}
-.highlight .vc {
-  color: #008080;
-}
-.highlight .vg {
-  color: #008080;
-}
-.highlight .vi {
-  color: #008080;
-}
-.highlight .nv {
-  color: #008080;
-}
-.highlight .ow {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .o {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .w {
-  color: #bbbbbb;
+
+/* Light mode syntax highlighting */
+body.light-mode {
+  .highlight {
+    background: #f8fafc;
+    
+    /* Comments */
+    .c, .c1, .cm, .cs { color: #64748b; }
+    
+    /* Keywords */
+    .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #7c3aed; }
+    
+    /* Names */
+    .n { color: #334155; }
+    .na { color: #0891b2; }
+    .nb { color: #b45309; }
+    .nc { color: #059669; font-weight: 600; }
+    .nd { color: #db2777; }
+    .ne { color: #dc2626; }
+    .nf { color: #2563eb; }
+    .ni { color: #7c3aed; }
+    .nl { color: #b45309; }
+    .nn { color: #059669; }
+    .no { color: #dc2626; }
+    .nt { color: #db2777; }
+    .nv { color: #0891b2; }
+    
+    /* Operators */
+    .o, .ow { color: #db2777; }
+    
+    /* Punctuation */
+    .p { color: #64748b; }
+    
+    /* Strings */
+    .s, .s1, .s2, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss { color: #059669; }
+    
+    /* Numbers */
+    .m, .mi, .mf, .mh, .mo, .il { color: #b45309; }
+    
+    /* Generic */
+    .gd { color: #dc2626; background-color: #fef2f2; }
+    .gi { color: #059669; background-color: #f0fdf4; }
+    .go { color: #64748b; }
+    .gp { color: #64748b; }
+    .gh { color: #1e293b; }
+    .gu { color: #0891b2; }
+    
+    /* Line numbers */
+    .lineno { 
+      color: #94a3b8; 
+      border-right-color: #e2e8f0;
+    }
+    
+    /* Variable */
+    .v, .vi, .vc, .vg { color: #0891b2; }
+  }
+  
+  code.highlighter-rouge {
+    background: #f1f5f9;
+    color: #0891b2;
+    border-color: #e2e8f0;
+  }
 }
