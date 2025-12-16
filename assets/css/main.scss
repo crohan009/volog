@@ -53,6 +53,51 @@ body {
   font-size: 0.9em;
 }
 
+.nav-text {
+  display: inline;
+}
+
+/* Mobile Header Styles */
+@media screen and (max-width: 600px) {
+  .site-header .wrapper {
+    padding: 0;
+  }
+  
+  .site-title {
+    font-size: 1rem;
+  }
+  
+  .site-title::before {
+    font-size: 0.9em;
+  }
+  
+  .site-nav {
+    gap: 0.25rem;
+  }
+  
+  .site-nav .page-link {
+    margin-right: 4px;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  
+  .nav-icon {
+    font-size: 0.85em;
+  }
+  
+  /* Hide text labels on very small screens, show only icons */
+  @media screen and (max-width: 380px) {
+    .nav-text {
+      display: none;
+    }
+    
+    .site-nav .page-link {
+      padding: 0.5rem;
+    }
+  }
+}
+
 /* Theme Toggle Switch */
 .theme-toggle {
   position: relative;
