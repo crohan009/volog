@@ -761,6 +761,46 @@ body.light-mode ::-webkit-scrollbar-thumb:hover {
 }
 
 /* ========================================
+   Theme-aware Tables (fix: tables staying dark in light mode)
+   ======================================== */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  color: var(--text-body);
+}
+
+.post-content table th,
+.post-content table td {
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.post-content table th {
+  background: var(--bg-elevated);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.post-content table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+body.dark-mode .post-content table tbody tr:hover td {
+  background: rgba(0, 240, 255, 0.05);
+}
+
+body.light-mode .post-content table tbody tr:hover td {
+  background: rgba(3, 105, 161, 0.05);
+}
+
+/* ========================================
    Smooth Transitions
    ======================================== */
 body,

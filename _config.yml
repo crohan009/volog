@@ -1,7 +1,7 @@
 title: the `eigen` layers
 author: Rohan
 baseurl: "/volog"
-description: "Deep dives into machine learning, transformers, and AI research."
+description: "Deep dives into machine learning, transformers, foundation models, and the cutting edge of AI research."
 profile_url: "https://crohan009.github.io/"
 github_username: crohan009
 
@@ -14,6 +14,8 @@ plugins:
 exclude:
   - Gemfile
   - Gemfile.lock
+  - vendor
+  - .bundle
 kramdown:
   input: GFM
   auto_ids: true

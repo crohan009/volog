@@ -38,7 +38,7 @@ Each technology in this journey builds upon the last, solving a critical limitat
 
 ![Innovation Roadmap]({{ '/assets/images/reward_forcing/02_roadmap.png' | relative_url }})
 {: style="width: 100%;" class="center"}
-*Fig. 2. The directed graph showing how technologies build upon each other chronologically.*
+*Fig. 2. Graph showing how each of the technologies build upon each other chronologically.*
 
 ---
 
@@ -331,9 +331,9 @@ Reward Forcing enables several breakthrough capabilities:
 
 ## **11. Future Directions**
 
-![Future Directions]({{ '/assets/images/reward_forcing/14_future.png' | relative_url }})
+<!-- ![Future Directions]({{ '/assets/images/reward_forcing/14_future.png' | relative_url }})
 {: style="width: 100%;" class="center"}
-*Fig. 14. Future research directions for Reward Forcing.*
+*Fig. 14. Future research directions for Reward Forcing.* -->
 
 ### Multi-Reward Optimization
 Balancing competing rewards simultaneously (motion, aesthetics, text-alignment)
