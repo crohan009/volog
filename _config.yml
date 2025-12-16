@@ -9,7 +9,7 @@ github_username: crohan009
 markdown: kramdown
 highlighter: rouge
 excerpt_separator: <!--more-->
-gems:
+plugins:
   - jekyll-feed
 exclude:
   - Gemfile
