@@ -255,13 +255,6 @@
 .other-pages {
   margin-top: $spacing-unit * 0.5;
   
-  img {
-    border-radius: 50%;
-    border: 3px solid $accent-primary;
-    @include glow-effect($accent-primary, 20px);
-    margin-bottom: 2rem;
-  }
-  
   p {
     color: $text-muted;
     line-height: 1.8;
