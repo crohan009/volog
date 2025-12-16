@@ -1,13 +1,19 @@
 <header class="site-header" role="banner" id='header-bar'>
     <div class="wrapper">
-        {% assign default_paths = site.pages | map: "path" %}
         <a class="site-title" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
-        <nav class="site-nav header-flex-container">
-            <a class="page-link" href="{{ '/archive.html' | relative_url }}">&#x231b; Archive</a>
-            <a class="page-link" href="{{ '/about.html' | relative_url }}">&#x2753; About</a>
-            <div class="theme-switch">
+        <nav class="site-nav">
+            <a class="page-link" href="{{ '/archive.html' | relative_url }}">
+                <span class="nav-icon">&#x1F4DA;</span> Archive
+            </a>
+            <a class="page-link" href="{{ '/about.html' | relative_url }}">
+                <span class="nav-icon">&#x1F464;</span> About
+            </a>
+            <div class="theme-toggle">
                 <input type="checkbox" onclick="toggleDarkMode()" id="switch" name="theme" />
-                <label for="switch" class="slider round"></label>
+                <label for="switch" class="toggle-label">
+                    <span class="toggle-icon sun">&#x2600;</span>
+                    <span class="toggle-icon moon">&#x1F319;</span>
+                </label>
             </div>
         </nav>
     </div>

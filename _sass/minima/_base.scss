@@ -8,14 +8,23 @@ ul, figure {
   padding: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid $crimson-color-very-light;
-    margin: 2em 0;
-    padding: 0; 
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid $border-color;
+  margin: 2.5em 0;
+  padding: 0;
+  background: linear-gradient(90deg, transparent, $accent-primary, transparent);
+  opacity: 0.3;
 }
 
 /**
@@ -24,14 +33,35 @@ hr {
 body {
   font: $base-font-weight #{$base-font-size}/#{$base-line-height} $base-font-family;
   color: $text-color;
-  background-color: $background-color;
+  background-color: $bg-primary;
   -webkit-text-size-adjust: 100%;
   -webkit-font-feature-settings: "kern" 1;
      -moz-font-feature-settings: "kern" 1;
        -o-font-feature-settings: "kern" 1;
           font-feature-settings: "kern" 1;
   font-kerning: normal;
+  min-height: 100vh;
+}
 
+/* Animated gradient background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(0, 240, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(244, 114, 182, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+::selection {
+  background: rgba($accent-primary, 0.3);
+  color: #fff;
 }
 
 .share-buttons {
@@ -52,29 +82,69 @@ body {
 }
 
 .table-of-content {
+  padding: 1.5rem;
+  background: $bg-card;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  margin: 1.5rem 0;
+  
   li {
-    font-size: 96%;
-    color: $brand-color;
-    list-style-type: disc;
+    font-size: 95%;
+    color: $text-muted;
+    list-style-type: none;
+    padding: 0.3rem 0;
+    
+    &::before {
+      content: '→';
+      color: $accent-primary;
+      margin-right: 0.5rem;
+    }
+    
+    a {
+      color: $text-color;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        color: $accent-primary;
+        padding-left: 5px;
+      }
+    }
   }
 }
 
 .page-navigation {
   font-size: 90%;
-  display: block;
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  overflow: hidden;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid $border-color;
 
   a {
-    display: block;
-    overflow: hidden;
-    width: 50%;
-    float: left;
-    margin: 1em 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: $accent-primary;
+      @include glow-effect($accent-primary, 10px);
+      transform: translateY(-2px);
+    }
   }
 
   .next {
     text-align: right;
+    margin-left: auto;
+  }
+  
+  .prev {
+    text-align: left;
   }
 }
 
@@ -88,24 +158,22 @@ ul, ol, dl, figure,
   margin-bottom: $spacing-unit / 2;
 }
 
-
-
 /**
  * Images
  */
 img {
   max-width: 100%;
   vertical-align: middle;
-  margin: 10px auto;
+  margin: 1.5rem auto;
   text-align: center;
   display: block;
-  margin: 0 auto;
+  border-radius: 8px;
 }
 
 .center {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 
 /**
@@ -117,11 +185,11 @@ figure > img {
 
 figcaption {
   font-size: $small-font-size;
-  color: $grey-color-dark;
-  padding-bottom: 10px;
+  color: $text-muted;
+  padding: 10px 0;
+  text-align: center;
+  font-style: italic;
 }
-
-
 
 /**
  * Lists
@@ -131,59 +199,87 @@ ul, ol {
 }
 
 li {
+  margin-bottom: 0.3rem;
+  
   > ul,
   > ol {
     margin-bottom: 0;
   }
 }
 
-
 /**
  * Table
  */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: $bg-card;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid $border-color;
+}
+
 table.info {
   max-width: 100%;
-  border-top: 2px solid $grey-color;
-  border-bottom: 2px solid $grey-color;
   margin: 20px auto;
   font-size: 90%;
 
   th, td {
-    padding: 2px 6px;
+    padding: 12px 16px;
     text-align: left;
     vertical-align: top;
+    border-bottom: 1px solid $border-color;
   }
 
   th {
     text-align: center;
-    border-bottom: 1px solid $grey-color-light;
+    background: $bg-elevated;
+    color: $accent-primary;
+    font-weight: 600;
+  }
+  
+  tr:hover {
+    background: rgba($accent-primary, 0.05);
   }
 }
-
 
 /**
  * Headings
  */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: $base-font-weight;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.02em;
 }
 
+h1 {
+  font-size: 2.25rem;
+}
 
+h2 {
+  font-size: 1.75rem;
+}
+
+h3 {
+  font-size: 1.35rem;
+}
 
 /**
  * Links
  */
 a {
-  color: $brand-color;
+  color: $accent-primary;
   text-decoration: none;
+  transition: all 0.2s ease;
 
   &:visited {
-    color: $brand-color;
+    color: $accent-primary;
   }
 
   &:hover {
-    color: $crimson-color-light;
-    text-decoration: underline;
+    color: lighten($accent-primary, 15%);
+    @include text-glow($accent-primary);
   }
 
   .social-media-list &:hover {
@@ -195,57 +291,77 @@ a {
   }
 }
 
-
 /**
  * Blockquotes
  */
 blockquote {
-  color: #777777;
-  border-left: 4px solid #bbbbbb;
-  padding: 10px;
-  margin: 10px;
-  padding-left: 25px;
-  @include relative-font-size(0.9);
-  background: #f0f0f0;
+  color: $text-muted;
+  border-left: 3px solid $accent-primary;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  background: $bg-card;
+  border-radius: 0 8px 8px 0;
+  @include relative-font-size(0.95);
+  font-style: italic;
 
   > :last-child {
     margin-bottom: 0;
   }
+  
+  p {
+    margin: 0;
+  }
 }
-
-
 
 /**
  * Code formatting
  */
 pre,
 code {
-  @include relative-font-size(0.9375);
-  border: 1px solid $grey-color-light;
-  border-radius: 3px;
-  background-color: #f2f2f2;
+  @include relative-font-size(0.875);
+  font-family: $code-font-family;
+  border-radius: 6px;
+  background-color: $bg-card;
 }
 
 code {
-  padding: 1px 5px;
+  padding: 2px 6px;
+  color: $accent-primary;
+  border: 1px solid $border-color;
 }
 
 pre {
-  padding: 4px 6px;
+  padding: 1.25rem;
   overflow-x: auto;
+  border: 1px solid $border-color;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $accent-primary, $accent-secondary, $accent-tertiary);
+    border-radius: 6px 6px 0 0;
+  }
 
   > code {
     border: 0;
-    padding-right: 0;
-    padding-left: 0;
+    padding: 0;
+    color: $text-color;
+    background: transparent;
   }
 
   .lineno {
-    @include relative-font-size(0.9);
+    @include relative-font-size(0.85);
+    color: $text-dim;
+    padding-right: 1rem;
+    border-right: 1px solid $border-color;
+    margin-right: 1rem;
   }
 }
-
-
 
 /**
  * Wrapper
@@ -267,8 +383,6 @@ pre {
   }
 }
 
-
-
 /**
  * Clearfix
  */
@@ -277,8 +391,6 @@ pre {
   display: table;
   clear: both;
 }
-
-
 
 /**
  * Icons
@@ -299,5 +411,24 @@ pre {
 
   li + li {
     padding-top: 5px;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $grey-color-light;
+  border-radius: 4px;
+  
+  &:hover {
+    background: $accent-primary;
   }
 }
