@@ -199,106 +199,86 @@ body.light-mode .hamburger-line {
   background-color: var(--text-color, #0f172a);
 }
 
-/* Theme Toggle Switch */
-.theme-toggle {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  margin-left: 1rem;
-}
-
-.theme-toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
-
-.toggle-label {
+/* ========================================
+   Simple Theme Toggle Button
+   ======================================== */
+.theme-toggle-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 56px;
-  height: 28px;
-  background: #1a1a28;
-  border-radius: 20px;
-  padding: 4px;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin-left: 1rem;
+  background: transparent;
+  border: 1px solid var(--border-color, #27272a);
+  border-radius: 10px;
   cursor: pointer;
+  transition: all 0.3s ease;
   position: relative;
-  border: 1px solid #27272a;
+  overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--accent-primary, #00f0ff);
+  background: rgba(0, 240, 255, 0.05);
+  transform: scale(1.05);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+/* Theme icons */
+.theme-icon {
+  font-size: 1.25rem;
   transition: all 0.3s ease;
-}
-
-.toggle-label:hover {
-  border-color: #00f0ff;
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-}
-
-.toggle-icon {
-  font-size: 14px;
-  z-index: 1;
-  transition: all 0.3s ease;
-}
-
-.toggle-icon.sun {
-  opacity: 0.5;
-}
-
-.toggle-icon.moon {
-  opacity: 1;
-}
-
-.toggle-label::before {
-  content: '';
   position: absolute;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00f0ff, #7c3aed);
-  top: 2px;
-  left: 2px;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
 }
 
-input:checked + .toggle-label::before {
-  transform: translateX(28px);
-  background: linear-gradient(135deg, #f59e0b, #f97316);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
-}
-
-input:checked + .toggle-label .sun {
+/* Dark mode (default): show moon, hide sun */
+.theme-icon.moon {
   opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 
-input:checked + .toggle-label .moon {
-  opacity: 0.5;
+.theme-icon.sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
 }
 
-/* Mobile-specific toggle styles */
+/* Light mode: show sun, hide moon */
+body.light-mode .theme-icon.moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+
+body.light-mode .theme-icon.sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Light mode button styling */
+body.light-mode .theme-toggle-btn {
+  border-color: var(--border-color, #e2e8f0);
+}
+
+body.light-mode .theme-toggle-btn:hover {
+  border-color: var(--accent-primary, #0369a1);
+  background: rgba(3, 105, 161, 0.05);
+}
+
+/* Mobile styles for theme toggle */
 @media screen and (max-width: 600px) {
-  .theme-toggle {
-    margin-left: 0.5rem;
+  .theme-toggle-btn {
+    width: 44px;
+    height: 44px;
+    margin: 1rem auto 0;
+    border-radius: 12px;
   }
   
-  .toggle-label {
-    width: 48px;
-    height: 24px;
-  }
-  
-  .toggle-label::before {
-    width: 18px;
-    height: 18px;
-    top: 2px;
-    left: 2px;
-  }
-  
-  input:checked + .toggle-label::before {
-    transform: translateX(24px);
-  }
-  
-  .toggle-icon {
-    font-size: 11px;
+  .theme-icon {
+    font-size: 1.4rem;
   }
 }
 
